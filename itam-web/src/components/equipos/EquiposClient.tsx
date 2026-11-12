@@ -1,8 +1,10 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { Plus, Search, Download } from "lucide-react";
+import { Plus, Search, Download, QrCode, Printer, Monitor } from "lucide-react";
 import { exportToExcel } from "@/lib/excel";
+import { BarcodeLabel } from "./BarcodeLabel";
+import { WorkstationTree } from "./WorkstationTree";
 import { createAdminClient } from "@/lib/supabase/admin";
 import type { InventarioView, Categoria, Marca, Modelo, Color, TipoEquipo, EstadoOperativo, Ubicacion } from "@/lib/types";
 
@@ -64,6 +66,8 @@ export function EquiposClient(props: {
   const [sedeFilter, setSedeFilter] = useState("");
   const [search, setSearch] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
+  const [labelModal, setLabelModal] = useState<InventarioView | null>(null);
+  const [wsModal, setWsModal] = useState<InventarioView | null>(null);
 
   // form state
   const [form, setForm] = useState({
@@ -172,7 +176,12 @@ export function EquiposClient(props: {
       <div className="bg-white rounded-xl border shadow-sm p-4 flex flex-wrap gap-3">
         <div className="flex items-center gap-2 border rounded-lg px-3 py-1.5 flex-1 min-w-[200px]">
           <Search size={16} className="text-slate-400" />
-          <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Código patrimonial, barras o serie..." className="flex-1 outline-none text-sm" />
+          <input value={search} onChange={(e) => setSearch(e.target.value)} onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              const found = inventario.find((x) => x.codigo_barras === search || x.codigo_patrimonial === search || x.numero_serie === search);
+              if (found) setLabelModal(found);
+            }
+          }} placeholder="Código patrimonial, barras o serie (escáner USB)..." className="flex-1 outline-none text-sm" />
         </div>
         <select value={catFilter} onChange={(e) => setCatFilter(e.target.value)} className="border rounded-lg px-3 py-1.5 text-sm">
           <option value="">Todas las categorías</option>
@@ -200,6 +209,7 @@ export function EquiposClient(props: {
               <th className="text-left px-3 py-3">Área</th>
               <th className="text-left px-3 py-3">Padre</th>
               <th className="text-left px-3 py-3">Valor</th>
+              <th className="text-right px-3 py-3">Acciones</th>
             </tr>
           </thead>
           <tbody>
@@ -218,6 +228,16 @@ export function EquiposClient(props: {
                 <td className="px-3 py-2">{e.area_departamento}</td>
                 <td className="px-3 py-2 text-xs">{e.equipo_padre_codigo_patrimonial ?? "—"}</td>
                 <td className="px-3 py-2">S/ {Number(e.valor_compra ?? 0).toLocaleString()}</td>
+                <td className="px-3 py-2 text-right">
+                  {e.categoria === "PC/Workstation" && (
+                    <button onClick={() => setWsModal(e)} className="p-1.5 hover:bg-slate-100 rounded text-slate-600" title="Ver estación de trabajo">
+                      <Monitor size={15} />
+                    </button>
+                  )}
+                  <button onClick={() => setLabelModal(e)} className="p-1.5 hover:bg-slate-100 rounded text-slate-600" title="Generar etiqueta patrimonial">
+                    <QrCode size={15} />
+                  </button>
+                </td>
               </tr>
             ))}
           </tbody>
@@ -302,6 +322,34 @@ export function EquiposClient(props: {
               <button onClick={() => setModalOpen(false)} className="px-4 py-2 border rounded-lg text-sm">Cancelar</button>
               <button onClick={saveEquipo} className="bg-emerald-600 text-white px-4 py-2 rounded-lg text-sm">Guardar</button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {labelModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6">
+            <div className="flex items-center justify-between mb-3">
+              <h2 className="font-bold text-lg">Etiqueta Patrimonial</h2>
+              <button onClick={() => setLabelModal(null)} className="text-slate-400">✕</button>
+            </div>
+            <BarcodeLabel codigo={labelModal.codigo_patrimonial} codigoBarras={labelModal.codigo_barras} categoria={labelModal.categoria ?? ""} />
+          </div>
+        </div>
+      )}
+
+      {wsModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg p-6">
+            <div className="flex items-center justify-between mb-3">
+              <h2 className="font-bold text-lg">Estación de Trabajo</h2>
+              <button onClick={() => setWsModal(null)} className="text-slate-400">✕</button>
+            </div>
+            <WorkstationTree parent={wsModal} hijos={inventario.filter((e) => e.id_equipo_padre === wsModal.id_equipo)} onUnlink={async (id) => {
+              const admin = createAdminClient();
+              await admin.from("equipos").update({ id_equipo_padre: null }).eq("id_equipo", id);
+              setInventario((inv) => inv.map((e) => e.id_equipo === id ? { ...e, id_equipo_padre: null, equipo_padre_codigo_patrimonial: null } : e));
+            }} />
           </div>
         </div>
       )}

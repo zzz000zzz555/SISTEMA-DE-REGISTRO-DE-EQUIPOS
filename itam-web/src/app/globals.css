@@ -1,26 +1,39 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-mono), ui-monospace, "JetBrains Mono", monospace;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-inter);
+  --font-mono: var(--font-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
+body { font-family: var(--font-inter), system-ui, sans-serif; }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
-}
+.mono { font-family: var(--font-mono), ui-monospace, monospace; }
+
+/* Design tokens */
+.bg-surface { background-color: #FFFFFF; }
+.border-subtle { border-color: #E2E8F0; }
+
+/* Scrollbar sutil */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #94A3B8; }
+
+/* Skeleton */
+.skeleton { animation: pulse 1.5s cubic-bezier(0.4,0,0.6,1) infinite; background-color: #E2E8F0; border-radius: 4px; }
+@keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: .5; } }
+
+/* Badge semántico */
+.badge { display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; border-radius: 9999px; font-size: 11px; font-weight: 600; border: 1px solid; letter-spacing: 0.02em; }
+.badge::before { content: "•"; font-size: 10px; }
+.badge-activo { background: #ECFDF5; color: #065F46; border-color: #A7F3D0; }
+.badge-mant { background: #FFFBEB; color: #92400E; border-color: #FDE68A; }
+.badge-baja { background: #FEF2F2; color: #991B1B; border-color: #FECACA; }
+.badge-info { background: #EEF2FF; color: #3730A3; border-color: #C7D2FE; }
+
+/* Slide-over */
+.drawer-overlay { backdrop-filter: blur(2px); }

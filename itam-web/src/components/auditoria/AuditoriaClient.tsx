@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { JsonDiffViewer } from "./JsonDiffViewer";
 
 export function AuditoriaClient({ rows }: { rows: any[] }) {
   const [selected, setSelected] = useState<any | null>(null);
@@ -42,16 +43,7 @@ export function AuditoriaClient({ rows }: { rows: any[] }) {
               <h2 className="font-bold text-lg">Diff: {selected.tabla_afectada} · {selected.operacion}</h2>
               <button onClick={() => setSelected(null)} className="text-slate-400">✕</button>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <div className="text-sm font-semibold text-red-600 mb-2">Antes (OLD)</div>
-                <pre className="bg-red-50 p-3 rounded text-xs overflow-auto max-h-96">{JSON.stringify(selected.datos_anteriores, null, 2)}</pre>
-              </div>
-              <div>
-                <div className="text-sm font-semibold text-emerald-600 mb-2">Después (NEW)</div>
-                <pre className="bg-emerald-50 p-3 rounded text-xs overflow-auto max-h-96">{JSON.stringify(selected.datos_nuevos, null, 2)}</pre>
-              </div>
-            </div>
+            <JsonDiffViewer oldData={selected.datos_anteriores} newData={selected.datos_nuevos} />
           </div>
         </div>
       )}
