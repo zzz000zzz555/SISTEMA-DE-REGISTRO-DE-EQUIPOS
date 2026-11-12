@@ -6,8 +6,8 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "sw
 const mono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-mono", display: "swap" });
 
 export const metadata: Metadata = {
-  title: "ITAM - Gestión de Activos TI",
-  description: "Sistema Empresarial de Gestión y Registro de Activos TI e Inventario Patrimonial",
+  title: "BERU | Gestión Empresarial de Activos TI y Patrimonio",
+  description: "BERU Enterprise — Sistema Empresarial de Registro de Equipos, Control Patrimonial y Seguridad RBAC",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

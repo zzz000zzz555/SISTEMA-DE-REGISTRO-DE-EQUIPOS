@@ -17,7 +17,7 @@ export async function exportToExcel(opts: {
   // Encabezado institucional
   ws.mergeCells("A1", `${String.fromCharCode(64 + opts.columns.length)}1`);
   const titleCell = ws.getCell("A1");
-  titleCell.value = "INSTITUCIÓN - SISTEMA ITAM";
+  titleCell.value = "BERU — SISTEMA EMPRESARIAL DE GESTIÓN PATRIMONIAL Y ACTIVOS TI";
   titleCell.font = { size: 14, bold: true, color: { argb: "FFFFFF" } };
   titleCell.fill = { type: "pattern", pattern: "solid", fgColor: { argb: "1E293B" } };
   titleCell.alignment = { horizontal: "center", vertical: "middle" };

@@ -99,7 +99,7 @@ export function RolesClient({
           <Plus size={16} /> Nuevo
         </button>
         <button onClick={() => exportToExcel({
-          title: "Gestión de Roles",
+          title: "BERU — Gestión de Roles",
           exportedBy: "admin",
           columns: [
             { header: "ID", key: "id_rol", width: 8 },

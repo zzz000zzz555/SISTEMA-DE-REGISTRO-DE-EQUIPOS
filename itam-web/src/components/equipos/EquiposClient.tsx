@@ -1,10 +1,11 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { Plus, Search, Download, QrCode, Printer, Monitor } from "lucide-react";
+import { Plus, Search, Download, QrCode, Printer, Monitor, FileText } from "lucide-react";
 import { exportToExcel } from "@/lib/excel";
 import { BarcodeLabel } from "./BarcodeLabel";
 import { WorkstationTree } from "./WorkstationTree";
+import { ActaCargo } from "./ActaCargo";
 import { createClient } from "@/lib/supabase/client";
 import type { InventarioView, Categoria, Marca, Modelo, Color, TipoEquipo, EstadoOperativo, Ubicacion } from "@/lib/types";
 
@@ -68,6 +69,7 @@ export function EquiposClient(props: {
   const [modalOpen, setModalOpen] = useState(false);
   const [labelModal, setLabelModal] = useState<InventarioView | null>(null);
   const [wsModal, setWsModal] = useState<InventarioView | null>(null);
+  const [actaModal, setActaModal] = useState<InventarioView | null>(null);
 
   // form state
   const [form, setForm] = useState({
@@ -147,7 +149,7 @@ export function EquiposClient(props: {
           <Plus size={16} /> Nuevo Equipo
         </button>
         <button onClick={() => exportToExcel({
-          title: "Inventario de Equipos",
+          title: "BERU — Inventario de Equipos",
           exportedBy: "admin",
           columns: [
             { header: "Código Patrimonial", key: "codigo_patrimonial", width: 16 },
@@ -230,9 +232,14 @@ export function EquiposClient(props: {
                 <td className="px-3 py-2">S/ {Number(e.valor_compra ?? 0).toLocaleString()}</td>
                 <td className="px-3 py-2 text-right">
                   {e.categoria === "PC/Workstation" && (
-                    <button onClick={() => setWsModal(e)} className="p-1.5 hover:bg-slate-100 rounded text-slate-600" title="Ver estación de trabajo">
-                      <Monitor size={15} />
-                    </button>
+                    <>
+                      <button onClick={() => setWsModal(e)} className="p-1.5 hover:bg-slate-100 rounded text-slate-600" title="Ver estación de trabajo">
+                        <Monitor size={15} />
+                      </button>
+                      <button onClick={() => setActaModal(e)} className="p-1.5 hover:bg-slate-100 rounded text-slate-600" title="Emitir Acta de Cargo">
+                        <FileText size={15} />
+                      </button>
+                    </>
                   )}
                   <button onClick={() => setLabelModal(e)} className="p-1.5 hover:bg-slate-100 rounded text-slate-600" title="Generar etiqueta patrimonial">
                     <QrCode size={15} />
@@ -350,6 +357,18 @@ export function EquiposClient(props: {
               await admin.from("equipos").update({ id_equipo_padre: null }).eq("id_equipo", id);
               setInventario((inv) => inv.map((e) => e.id_equipo === id ? { ...e, id_equipo_padre: null, equipo_padre_codigo_patrimonial: null } : e));
             }} />
+          </div>
+        </div>
+      )}
+
+      {actaModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 overflow-y-auto">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-4xl my-8 p-6">
+            <div className="flex items-center justify-between mb-3">
+              <h2 className="font-bold text-lg">Acta de Cargo Patrimonial</h2>
+              <button onClick={() => setActaModal(null)} className="text-slate-400">✕</button>
+            </div>
+            <ActaCargo parent={actaModal} hijos={inventario.filter((e) => e.id_equipo_padre === actaModal.id_equipo)} usuario="admin@sistema.com" />
           </div>
         </div>
       )}

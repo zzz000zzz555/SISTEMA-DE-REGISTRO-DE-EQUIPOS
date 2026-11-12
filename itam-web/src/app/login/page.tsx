@@ -4,6 +4,7 @@ import { useState } from "react";
 import { loginClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 import { ShieldCheck, User, Lock, Eye, EyeOff } from "lucide-react";
+import { BeruLogo } from "@/components/ui/BeruLogo";
 
 export default function LoginPage() {
   const [username, setUsername] = useState("");
@@ -39,12 +40,13 @@ export default function LoginPage() {
               <ShieldCheck size={24} className="text-indigo-300" />
             </div>
             <div>
-              <div className="font-bold text-lg tracking-wide">ITAM ENTERPRISE</div>
+              <div className="font-bold text-lg tracking-wide">BERU ENTERPRISE</div>
               <div className="text-xs text-indigo-300/70 uppercase tracking-widest">Control Patrimonial</div>
             </div>
           </div>
-          <h1 className="text-4xl font-bold leading-tight mb-4">Sistema Empresarial de Gestión de Activos TI</h1>
-          <p className="text-indigo-200/80 text-lg max-w-md">Control Patrimonial de Activos TI, Periféricos, Auditoría Forense y Seguridad RBAC.</p>
+          <div className="mb-6"><BeruLogo size="lg" /></div>
+          <h1 className="text-4xl font-bold leading-tight mb-4">BERU Enterprise</h1>
+          <p className="text-indigo-200/80 text-lg max-w-md">Sistema Empresarial de Registro de Equipos, Control Patrimonial y Seguridad RBAC.</p>
         </div>
         <div className="relative z-10 flex items-center gap-4 text-xs text-indigo-300/70">
           <span>ISO 27001 Ready</span>
@@ -63,7 +65,7 @@ export default function LoginPage() {
               <ShieldCheck size={22} />
             </div>
             <h2 className="text-2xl font-bold text-slate-800">Iniciar Sesión</h2>
-            <p className="text-slate-500 text-sm">Acceso al sistema ITAM</p>
+            <p className="text-slate-500 text-sm">Acceso al sistema BERU</p>
           </div>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
