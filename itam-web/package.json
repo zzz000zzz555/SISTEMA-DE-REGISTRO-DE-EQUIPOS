@@ -32,13 +32,16 @@
     "zod": "^4.6.7"
   },
   "devDependencies": {
+    "@tailwindcss/postcss": "^4.3.5",
     "@tailwindcss/turbopack": "4.3.3",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "autoprefixer": "^10.6.2",
     "eslint": "^9",
     "eslint-config-next": "16.4.6",
     "gh-pages": "^6.3.0",
+    "postcss": "^8.5.32",
     "tailwindcss": "4.3.3",
     "typescript": "^5"
   }

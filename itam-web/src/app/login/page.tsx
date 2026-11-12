@@ -3,12 +3,14 @@
 import { useState } from "react";
 import { loginClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
+import { ShieldCheck, User, Lock, Eye, EyeOff } from "lucide-react";
 
 export default function LoginPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showPwd, setShowPwd] = useState(false);
   const router = useRouter();
 
   async function handleSubmit(e: React.FormEvent) {
@@ -21,49 +23,96 @@ export default function LoginPage() {
     else setError(res.message);
   }
 
+  function fillDemo() {
+    setUsername("admin");
+    setPassword("Admin@123");
+  }
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 to-slate-700">
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-8">
-        <div className="text-center mb-6">
-          <div className="inline-flex items-center justify-center w-14 h-14 rounded-xl bg-indigo-600 text-white mb-3">
-            <span className="text-2xl font-bold">IT</span>
+    <div className="min-h-screen grid grid-cols-1 lg:grid-cols-2 bg-slate-950">
+      {/* Columna izquierda: branding */}
+      <div className="hidden lg:flex flex-col justify-between bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 text-white p-12 relative overflow-hidden">
+        <div className="absolute inset-0 opacity-10" style={{ backgroundImage: "linear-gradient(rgba(255,255,255,.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.05) 1px, transparent 1px)", backgroundSize: "40px 40px" }} />
+        <div className="relative z-10">
+          <div className="flex items-center gap-3 mb-8">
+            <div className="w-12 h-12 rounded-xl bg-indigo-500/20 border border-indigo-400/30 flex items-center justify-center backdrop-blur">
+              <ShieldCheck size={24} className="text-indigo-300" />
+            </div>
+            <div>
+              <div className="font-bold text-lg tracking-wide">ITAM ENTERPRISE</div>
+              <div className="text-xs text-indigo-300/70 uppercase tracking-widest">Control Patrimonial</div>
+            </div>
           </div>
-          <h1 className="text-2xl font-bold text-slate-800">ITAM</h1>
-          <p className="text-slate-500 text-sm">Gestión de Activos TI e Inventario Patrimonial</p>
+          <h1 className="text-4xl font-bold leading-tight mb-4">Sistema Empresarial de Gestión de Activos TI</h1>
+          <p className="text-indigo-200/80 text-lg max-w-md">Control Patrimonial de Activos TI, Periféricos, Auditoría Forense y Seguridad RBAC.</p>
         </div>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">Usuario o correo</label>
-            <input
-              type="text"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              className="w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none"
-              placeholder="admin"
-              required
-            />
+        <div className="relative z-10 flex items-center gap-4 text-xs text-indigo-300/70">
+          <span>ISO 27001 Ready</span>
+          <span>•</span>
+          <span>Encriptación de Sesión</span>
+          <span>•</span>
+          <span>Control Patrimonial</span>
+        </div>
+      </div>
+
+      {/* Columna derecha: tarjeta de acceso */}
+      <div className="flex items-center justify-center p-8 bg-slate-50">
+        <div className="bg-white rounded-2xl shadow-xl border border-slate-200 p-8 w-full max-w-md">
+          <div className="text-center mb-6">
+            <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-indigo-600 text-white mb-3">
+              <ShieldCheck size={22} />
+            </div>
+            <h2 className="text-2xl font-bold text-slate-800">Iniciar Sesión</h2>
+            <p className="text-slate-500 text-sm">Acceso al sistema ITAM</p>
           </div>
-          <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">Contraseña</label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none"
-              placeholder="Admin@123"
-              required
-            />
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-1">Usuario o Correo</label>
+              <div className="relative">
+                <User size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                <input
+                  type="text"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-indigo-600 focus:border-indigo-600 outline-none"
+                  placeholder="admin"
+                  required
+                />
+              </div>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-1">Contraseña</label>
+              <div className="relative">
+                <Lock size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                <input
+                  type={showPwd ? "text" : "password"}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full pl-10 pr-12 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-indigo-600 focus:border-indigo-600 outline-none"
+                  placeholder="Admin@123"
+                  required
+                />
+                <button type="button" onClick={() => setShowPwd(!showPwd)} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
+                  {showPwd ? <EyeOff size={16} /> : <Eye size={16} />}
+                </button>
+              </div>
+            </div>
+            {error && <div className="text-red-600 text-sm bg-red-50 p-2 rounded-lg">{error}</div>}
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 rounded-xl shadow-md transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+            >
+              {loading ? "Ingresando..." : "Iniciar Sesión"}
+            </button>
+          </form>
+          <div className="mt-6 p-4 bg-slate-50 border border-slate-200 rounded-xl">
+            <div className="text-xs text-slate-500 mb-2">Acceso rápido de demostración</div>
+            <button onClick={fillDemo} className="text-sm text-indigo-600 hover:underline font-medium">
+              Autocompletar Credenciales Admin (admin / Admin@123)
+            </button>
           </div>
-          {error && <div className="text-red-600 text-sm bg-red-50 p-2 rounded">{error}</div>}
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2.5 rounded-lg transition disabled:opacity-50"
-          >
-            {loading ? "Ingresando..." : "Iniciar Sesión"}
-          </button>
-        </form>
-        <p className="text-xs text-slate-400 text-center mt-4">Prueba: admin / Admin@123</p>
+        </div>
       </div>
     </div>
   );
