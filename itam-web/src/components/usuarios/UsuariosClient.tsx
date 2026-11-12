@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Plus, Power } from "lucide-react";
-import { createAdminClient } from "@/lib/supabase/admin";
+import { createClient } from "@/lib/supabase/client";
 import type { Usuario, Rol, SesionToken } from "@/lib/types";
 
 export function UsuariosClient({ usuarios: initial, roles, sesiones: initialSes }: { usuarios: Usuario[]; roles: Rol[]; sesiones: SesionToken[] }) {
@@ -10,13 +10,13 @@ export function UsuariosClient({ usuarios: initial, roles, sesiones: initialSes 
   const [sesiones, setSesiones] = useState(initialSes);
 
   async function revocar(s: SesionToken) {
-    const admin = createAdminClient();
+    const admin = createClient();
     await admin.from("sesiones_tokens").update({ estado_sesion: "REVOCADA_ADMIN", fecha_finalizacion: new Date().toISOString(), motivo_cierre: "Revocado por seguridad" }).eq("id_sesion", s.id_sesion);
     setSesiones((ss) => ss.map((x) => x.id_sesion === s.id_sesion ? { ...x, estado_sesion: "REVOCADA_ADMIN" } : x));
   }
 
   async function toggleEstado(u: Usuario) {
-    const admin = createAdminClient();
+    const admin = createClient();
     const nuevo = u.estado_cuenta === "ACTIVO" ? "SUSPENDIDO" : "ACTIVO";
     await admin.from("usuarios").update({ estado_cuenta: nuevo }).eq("id_usuario", u.id_usuario);
     setUsuarios((us) => us.map((x) => x.id_usuario === u.id_usuario ? { ...x, estado_cuenta: nuevo as Usuario["estado_cuenta"] } : x));

@@ -1,22 +1,22 @@
-import { createAdminClient } from "@/lib/supabase/admin";
+"use client";
+
+import { useEffect, useState } from "react";
+import { createClient } from "@/lib/supabase/client";
 import { RolesClient } from "@/components/roles/RolesClient";
 
-export const dynamic = "force-dynamic";
-
-export default async function RolesPage() {
-  const admin = createAdminClient();
-  const [{ data: roles }, { data: modulos }, { data: permisos }, { data: rp }] = await Promise.all([
-    admin.from("roles").select("*").order("id_rol"),
-    admin.from("modulos_sistema").select("*").order("orden_visual"),
-    admin.from("permisos").select("*").order("id_permiso"),
-    admin.from("roles_permisos").select("*"),
-  ]);
-  return (
-    <RolesClient
-      roles={roles ?? []}
-      modulos={modulos ?? []}
-      permisos={permisos ?? []}
-      rolePermisos={rp ?? []}
-    />
-  );
+export default function RolesPage() {
+  const [props, setProps] = useState<any>(null);
+  useEffect(() => {
+    const sb = createClient();
+    Promise.all([
+      sb.from("roles").select("*").order("id_rol"),
+      sb.from("modulos_sistema").select("*").order("orden_visual"),
+      sb.from("permisos").select("*").order("id_permiso"),
+      sb.from("roles_permisos").select("*"),
+    ]).then(([r, m, p, rp]) => {
+      setProps({ roles: r.data ?? [], modulos: m.data ?? [], permisos: p.data ?? [], rolePermisos: rp.data ?? [] });
+    });
+  }, []);
+  if (!props) return <div className="text-slate-400">Cargando...</div>;
+  return <RolesClient {...props} />;
 }

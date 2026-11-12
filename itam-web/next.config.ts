@@ -1,16 +1,10 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
-  cacheComponents: false,
-  turbopack: {
-    rules: {
-      "*.css": {
-        loaders: ["@tailwindcss/turbopack"],
-        as: "*.css",
-      },
-    },
-  },
+  output: "export",
+  basePath: "/SISTEMA-DE-REGISTRO-DE-EQUIPOS",
+  trailingSlash: true,
+  images: { unoptimized: true },
 };
 
 export default nextConfig;

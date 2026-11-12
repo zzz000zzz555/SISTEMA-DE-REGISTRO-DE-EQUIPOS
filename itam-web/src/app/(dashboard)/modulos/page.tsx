@@ -1,13 +1,18 @@
-import { createAdminClient } from "@/lib/supabase/admin";
+"use client";
+
+import { useEffect, useState } from "react";
+import { createClient } from "@/lib/supabase/client";
 import { ModulosClient } from "@/components/modulos/ModulosClient";
 
-export const dynamic = "force-dynamic";
-
-export default async function ModulosPage() {
-  const admin = createAdminClient();
-  const [{ data: modulos }, { data: permisos }] = await Promise.all([
-    admin.from("modulos_sistema").select("*").order("orden_visual"),
-    admin.from("permisos").select("*").order("id_permiso"),
-  ]);
-  return <ModulosClient modulos={modulos ?? []} permisos={permisos ?? []} />;
+export default function ModulosPage() {
+  const [props, setProps] = useState<any>(null);
+  useEffect(() => {
+    const sb = createClient();
+    Promise.all([
+      sb.from("modulos_sistema").select("*").order("orden_visual"),
+      sb.from("permisos").select("*").order("id_permiso"),
+    ]).then(([m, p]) => setProps({ modulos: m.data ?? [], permisos: p.data ?? [] }));
+  }, []);
+  if (!props) return <div className="text-slate-400">Cargando...</div>;
+  return <ModulosClient {...props} />;
 }

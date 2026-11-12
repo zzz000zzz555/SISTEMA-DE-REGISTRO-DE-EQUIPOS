@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Command } from "cmdk";
 import { Search, Monitor, Wrench, Shield, Users, Boxes, FileText, Home } from "lucide-react";
-import { createAdminClient } from "@/lib/supabase/admin";
+import { createClient } from "@/lib/supabase/client";
 
 const nav = [
   { href: "/dashboard", label: "Dashboard", icon: Home, group: "Módulos" },
@@ -37,7 +37,7 @@ export function CommandPalette() {
 
   useEffect(() => {
     if (!open) return;
-    const admin = createAdminClient();
+    const admin = createClient();
     admin.from("equipos").select("id_equipo,codigo_patrimonial,codigo_barras,numero_serie").limit(50).then(({ data }) => {
       setEquipos(data ?? []);
     });

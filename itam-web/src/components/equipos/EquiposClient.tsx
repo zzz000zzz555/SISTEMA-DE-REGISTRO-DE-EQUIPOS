@@ -5,7 +5,7 @@ import { Plus, Search, Download, QrCode, Printer, Monitor } from "lucide-react";
 import { exportToExcel } from "@/lib/excel";
 import { BarcodeLabel } from "./BarcodeLabel";
 import { WorkstationTree } from "./WorkstationTree";
-import { createAdminClient } from "@/lib/supabase/admin";
+import { createClient } from "@/lib/supabase/client";
 import type { InventarioView, Categoria, Marca, Modelo, Color, TipoEquipo, EstadoOperativo, Ubicacion } from "@/lib/types";
 
 const SPEC_FIELDS: Record<string, { key: string; label: string; type?: string }[]> = {
@@ -109,7 +109,7 @@ export function EquiposClient(props: {
   const pcs = inventario.filter((e) => e.categoria === "PC/Workstation");
 
   async function saveEquipo() {
-    const admin = createAdminClient();
+    const admin = createClient();
     const { data, error } = await admin.from("equipos").insert({
       codigo_patrimonial: form.codigo_patrimonial,
       codigo_barras: form.codigo_barras,
@@ -346,7 +346,7 @@ export function EquiposClient(props: {
               <button onClick={() => setWsModal(null)} className="text-slate-400">✕</button>
             </div>
             <WorkstationTree parent={wsModal} hijos={inventario.filter((e) => e.id_equipo_padre === wsModal.id_equipo)} onUnlink={async (id) => {
-              const admin = createAdminClient();
+              const admin = createClient();
               await admin.from("equipos").update({ id_equipo_padre: null }).eq("id_equipo", id);
               setInventario((inv) => inv.map((e) => e.id_equipo === id ? { ...e, id_equipo_padre: null, equipo_padre_codigo_patrimonial: null } : e));
             }} />

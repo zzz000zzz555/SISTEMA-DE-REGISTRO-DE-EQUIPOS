@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Plus } from "lucide-react";
-import { createAdminClient } from "@/lib/supabase/admin";
+import { createClient } from "@/lib/supabase/client";
 
 export function MantenimientosClient({ mantenimientos: initial, equipos }: { mantenimientos: any[]; equipos: { id_equipo: string; codigo_patrimonial: string }[] }) {
   const [items, setItems] = useState(initial);
@@ -10,7 +10,7 @@ export function MantenimientosClient({ mantenimientos: initial, equipos }: { man
   const [form, setForm] = useState({ id_equipo: "", tipo: "PREVENTIVO", falla: "", trabajo: "", costo: "", tecnico: "" });
 
   async function save() {
-    const admin = createAdminClient();
+    const admin = createClient();
     const { data } = await admin.from("mantenimientos").insert({
       id_equipo: form.id_equipo,
       tipo_mantenimiento: form.tipo,

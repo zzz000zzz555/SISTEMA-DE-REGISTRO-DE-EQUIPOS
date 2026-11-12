@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Plus } from "lucide-react";
-import { createAdminClient } from "@/lib/supabase/admin";
+import { createClient } from "@/lib/supabase/client";
 import type { Categoria, Marca, Color, Ubicacion, TipoEquipo, Modelo } from "@/lib/types";
 
 type Tab = "categorias" | "marcas" | "colores" | "ubicaciones";
@@ -23,28 +23,28 @@ export function CatalogosClient(props: {
 
   async function addCategoria() {
     if (!newCat.nombre) return;
-    const admin = createAdminClient();
+    const admin = createClient();
     const { data } = await admin.from("categorias").insert({ nombre: newCat.nombre, prefijo_codigo: newCat.prefijo.toUpperCase(), esquema_atributos_sugerido: {}, vida_util_anios: 4, activo: true }).select().single();
     if (data) setCategorias((c) => [...c, data as Categoria]);
     setNewCat({ nombre: "", prefijo: "" });
   }
   async function addMarca() {
     if (!newMarca) return;
-    const admin = createAdminClient();
+    const admin = createClient();
     const { data } = await admin.from("marcas").insert({ nombre: newMarca, activo: true }).select().single();
     if (data) setMarcas((m) => [...m, data as Marca]);
     setNewMarca("");
   }
   async function addColor() {
     if (!newColor.nombre) return;
-    const admin = createAdminClient();
+    const admin = createClient();
     const { data } = await admin.from("colores").insert({ nombre: newColor.nombre, codigo_hex: newColor.hex }).select().single();
     if (data) setColores((c) => [...c, data as Color]);
     setNewColor({ nombre: "", hex: "#000000" });
   }
   async function addUbi() {
     if (!newUbi.sede || !newUbi.area) return;
-    const admin = createAdminClient();
+    const admin = createClient();
     const { data } = await admin.from("ubicaciones").insert({ sede: newUbi.sede, area_departamento: newUbi.area, piso_oficina: newUbi.piso, activo: true }).select().single();
     if (data) setUbicaciones((u) => [...u, data as Ubicacion]);
     setNewUbi({ sede: "", area: "", piso: "" });

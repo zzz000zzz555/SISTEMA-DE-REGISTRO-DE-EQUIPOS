@@ -3,7 +3,7 @@
 import { useState, useMemo } from "react";
 import { Plus, Search, MoreVertical, Edit2, Copy, Power, Download } from "lucide-react";
 import { exportToExcel } from "@/lib/excel";
-import { createAdminClient } from "@/lib/supabase/admin";
+import { createClient } from "@/lib/supabase/client";
 import type { Rol, Modulo, Permiso } from "@/lib/types";
 import { PermissionTree } from "./PermissionTree";
 
@@ -59,7 +59,7 @@ export function RolesClient({
   }
 
   async function save() {
-    const admin = createAdminClient();
+    const admin = createClient();
     if (editing) {
       await admin.from("roles").update({ nombre_rol: titulo.toUpperCase() }).eq("id_rol", editing.id_rol);
       await admin.from("roles_permisos").delete().eq("id_rol", editing.id_rol);
@@ -85,7 +85,7 @@ export function RolesClient({
   }
 
   async function toggleActivo(r: Rol) {
-    const admin = createAdminClient();
+    const admin = createClient();
     const nuevo = !r.activo;
     await admin.from("roles").update({ activo: nuevo, fecha_finalizacion: nuevo ? null : new Date().toISOString() }).eq("id_rol", r.id_rol);
     setRoles((rs) => rs.map((x) => (x.id_rol === r.id_rol ? { ...x, activo: nuevo } : x)));

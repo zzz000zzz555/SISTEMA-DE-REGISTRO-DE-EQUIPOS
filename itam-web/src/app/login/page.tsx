@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { loginAction } from "@/lib/auth";
+import { loginClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
@@ -15,7 +15,7 @@ export default function LoginPage() {
     e.preventDefault();
     setLoading(true);
     setError("");
-    const res = await loginAction(username, password);
+    const res = await loginClient(username, password);
     setLoading(false);
     if (res.ok) router.push("/dashboard");
     else setError(res.message);
@@ -33,7 +33,7 @@ export default function LoginPage() {
         </div>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">Usuario</label>
+            <label className="block text-sm font-medium text-slate-700 mb-1">Usuario o correo</label>
             <input
               type="text"
               value={username}
@@ -50,7 +50,7 @@ export default function LoginPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none"
-              placeholder="Admin123!"
+              placeholder="Admin@123"
               required
             />
           </div>
@@ -63,7 +63,7 @@ export default function LoginPage() {
             {loading ? "Ingresando..." : "Iniciar Sesión"}
           </button>
         </form>
-        <p className="text-xs text-slate-400 text-center mt-4">Usuarios de prueba: admin / Admin123! · tecnico / Tecnico123!</p>
+        <p className="text-xs text-slate-400 text-center mt-4">Prueba: admin / Admin@123</p>
       </div>
     </div>
   );

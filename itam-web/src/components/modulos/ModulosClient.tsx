@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Plus, Search, Pencil, X, GripVertical } from "lucide-react";
-import { createAdminClient } from "@/lib/supabase/admin";
+import { createClient } from "@/lib/supabase/client";
 import type { Modulo, Permiso } from "@/lib/types";
 
 export function ModulosClient({ modulos: initialModulos, permisos: initialPermisos }: { modulos: Modulo[]; permisos: Permiso[] }) {
@@ -17,7 +17,7 @@ export function ModulosClient({ modulos: initialModulos, permisos: initialPermis
   const filtered = modulos.filter((m) => m.nombre_modulo.toLowerCase().includes(search.toLowerCase()) || m.codigo_modulo.toLowerCase().includes(search.toLowerCase()));
 
   async function saveModulo() {
-    const admin = createAdminClient();
+    const admin = createClient();
     const { data } = await admin.from("modulos_sistema").insert({
       codigo_modulo: form.codigo.toUpperCase(),
       nombre_modulo: form.nombre.toUpperCase(),
@@ -33,7 +33,7 @@ export function ModulosClient({ modulos: initialModulos, permisos: initialPermis
 
   async function saveAccion() {
     if (!actionModal) return;
-    const admin = createAdminClient();
+    const admin = createClient();
     const { data } = await admin.from("permisos").insert({
       id_modulo: actionModal.moduloId,
       codigo_permiso: actionForm.codigo.toUpperCase(),
@@ -46,13 +46,13 @@ export function ModulosClient({ modulos: initialModulos, permisos: initialPermis
   }
 
   async function deleteAccion(id: number) {
-    const admin = createAdminClient();
+    const admin = createClient();
     await admin.from("permisos").delete().eq("id_permiso", id);
     setPermisos((ps) => ps.filter((p) => p.id_permiso !== id));
   }
 
   async function toggleModulo(m: Modulo) {
-    const admin = createAdminClient();
+    const admin = createClient();
     await admin.from("modulos_sistema").update({ activo: !m.activo, fecha_finalizacion: m.activo ? new Date().toISOString() : null }).eq("id_modulo", m.id_modulo);
     setModulos((ms) => ms.map((x) => x.id_modulo === m.id_modulo ? { ...x, activo: !m.activo } : x));
   }
