@@ -1,4 +1,4 @@
 :HL["/SISTEMA-DE-REGISTRO-DE-EQUIPOS/_next/static/chunks/0gh_5ypysq2j0.css","style"]
 2:[["children",{"s":"__PAGE__","h":160}]]
 1:[["children",{"s":"/_not-found","h":96,"c":"$Q2"}]]
-0:{"b":"my8kRgz9Vtnawot4Ic45P","t":{"t":{"s":"","h":80,"c":"$Q1"}}}
+0:{"b":"7xQoHEjVJhx07xeMoLiBf","t":{"t":{"s":"","h":80,"c":"$Q1"}}}
