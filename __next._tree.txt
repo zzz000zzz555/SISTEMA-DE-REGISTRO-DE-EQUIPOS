@@ -1,6 +1,6 @@
-:HL["/SISTEMA-DE-REGISTRO-DE-EQUIPOS/_next/static/chunks/2yz9wqw695g7v.css","style"]
+:HL["/SISTEMA-DE-REGISTRO-DE-EQUIPOS/_next/static/chunks/0-vakgscyv8g2.css","style"]
 :HL["/SISTEMA-DE-REGISTRO-DE-EQUIPOS/_next/static/media/07c7676b89ed2778-s.p.2bn3s6zvc0dyp.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
 :HL["/SISTEMA-DE-REGISTRO-DE-EQUIPOS/_next/static/media/53897e768d329f66-s.p.3t6q91iet4nsy.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
 :HL["https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap","style"]
 1:[["children",{"s":"__PAGE__","h":160}]]
-0:{"b":"HqYF55meZfMOhbGEJCz2S","t":{"t":{"s":"","h":80,"c":"$Q1"}}}
+0:{"b":"QmNDtSrE0nYA9L-i7Lk1n","t":{"t":{"s":"","h":80,"c":"$Q1"}}}
