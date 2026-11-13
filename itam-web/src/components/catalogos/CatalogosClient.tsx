@@ -59,24 +59,24 @@ export function CatalogosClient(props: {
 
   return (
     <div className="space-y-4">
-      <h1 className="text-2xl font-bold text-slate-800">Catálogos Maestros</h1>
+      <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-200">Catálogos Maestros</h1>
       <div className="flex gap-2 border-b">
         {tabs.map((t) => (
-          <button key={t.key} onClick={() => setTab(t.key)} className={`px-4 py-2 text-sm font-medium border-b-2 -mb-px ${tab === t.key ? "border-indigo-600 text-indigo-600" : "border-transparent text-slate-500"}`}>
+          <button key={t.key} onClick={() => setTab(t.key)} className={`px-4 py-2 text-sm font-medium border-b-2 -mb-px ${tab === t.key ? "border-indigo-600 text-indigo-600" : "border-transparent text-slate-500 dark:text-slate-400"}`}>
             {t.label}
           </button>
         ))}
       </div>
 
       {tab === "categorias" && (
-        <div className="bg-white rounded-xl border shadow-sm p-4 space-y-3">
+        <div className="bg-white dark:bg-slate-900 rounded-xl border shadow-sm p-4 space-y-3">
           <div className="flex gap-2">
             <input placeholder="Nombre categoría" value={newCat.nombre} onChange={(e) => setNewCat({ ...newCat, nombre: e.target.value })} className="border rounded-lg px-3 py-2 text-sm flex-1" />
             <input placeholder="Prefijo (MON)" value={newCat.prefijo} onChange={(e) => setNewCat({ ...newCat, prefijo: e.target.value })} className="border rounded-lg px-3 py-2 text-sm w-28" />
             <button onClick={addCategoria} className="bg-emerald-600 text-white px-4 py-2 rounded-lg text-sm flex items-center gap-1"><Plus size={14} /> Agregar</button>
           </div>
           <table className="w-full text-sm">
-            <thead className="bg-slate-50"><tr><th className="text-left px-3 py-2">Nombre</th><th className="text-left px-3 py-2">Prefijo</th><th className="text-left px-3 py-2">Vida útil</th><th className="text-left px-3 py-2">Estado</th></tr></thead>
+            <thead className="bg-slate-50 dark:bg-slate-950"><tr><th className="text-left px-3 py-2">Nombre</th><th className="text-left px-3 py-2">Prefijo</th><th className="text-left px-3 py-2">Vida útil</th><th className="text-left px-3 py-2">Estado</th></tr></thead>
             <tbody>
               {categorias.map((c) => (
                 <tr key={c.id_categoria} className="border-t"><td className="px-3 py-2">{c.nombre}</td><td className="px-3 py-2 font-mono">{c.prefijo_codigo}</td><td className="px-3 py-2">{c.vida_util_anios} años</td><td className="px-3 py-2">{c.activo ? "ACTIVO" : "ANULADO"}</td></tr>
@@ -87,21 +87,21 @@ export function CatalogosClient(props: {
       )}
 
       {tab === "marcas" && (
-        <div className="bg-white rounded-xl border shadow-sm p-4 space-y-3">
+        <div className="bg-white dark:bg-slate-900 rounded-xl border shadow-sm p-4 space-y-3">
           <div className="flex gap-2">
             <input placeholder="Nombre marca" value={newMarca} onChange={(e) => setNewMarca(e.target.value)} className="border rounded-lg px-3 py-2 text-sm flex-1" />
             <button onClick={addMarca} className="bg-emerald-600 text-white px-4 py-2 rounded-lg text-sm flex items-center gap-1"><Plus size={14} /> Agregar</button>
           </div>
           <div className="flex flex-wrap gap-2">
             {marcas.map((m) => (
-              <span key={m.id_marca} className="bg-slate-100 px-3 py-1.5 rounded-lg text-sm">{m.nombre}</span>
+              <span key={m.id_marca} className="bg-slate-100 dark:bg-slate-800 px-3 py-1.5 rounded-lg text-sm">{m.nombre}</span>
             ))}
           </div>
         </div>
       )}
 
       {tab === "colores" && (
-        <div className="bg-white rounded-xl border shadow-sm p-4 space-y-3">
+        <div className="bg-white dark:bg-slate-900 rounded-xl border shadow-sm p-4 space-y-3">
           <div className="flex gap-2">
             <input placeholder="Nombre color" value={newColor.nombre} onChange={(e) => setNewColor({ ...newColor, nombre: e.target.value })} className="border rounded-lg px-3 py-2 text-sm flex-1" />
             <input type="color" value={newColor.hex} onChange={(e) => setNewColor({ ...newColor, hex: e.target.value })} className="border rounded-lg w-12 h-10" />
@@ -109,7 +109,7 @@ export function CatalogosClient(props: {
           </div>
           <div className="flex flex-wrap gap-3">
             {colores.map((c) => (
-              <div key={c.id_color} className="flex items-center gap-2 bg-slate-50 px-3 py-2 rounded-lg">
+              <div key={c.id_color} className="flex items-center gap-2 bg-slate-50 dark:bg-slate-950 px-3 py-2 rounded-lg">
                 <span className="w-5 h-5 rounded border" style={{ background: c.codigo_hex }} />
                 <span className="text-sm">{c.nombre}</span>
                 <span className="text-xs text-slate-400 font-mono">{c.codigo_hex}</span>
@@ -120,7 +120,7 @@ export function CatalogosClient(props: {
       )}
 
       {tab === "ubicaciones" && (
-        <div className="bg-white rounded-xl border shadow-sm p-4 space-y-3">
+        <div className="bg-white dark:bg-slate-900 rounded-xl border shadow-sm p-4 space-y-3">
           <div className="flex gap-2">
             <input placeholder="Sede" value={newUbi.sede} onChange={(e) => setNewUbi({ ...newUbi, sede: e.target.value })} className="border rounded-lg px-3 py-2 text-sm flex-1" />
             <input placeholder="Área/Departamento" value={newUbi.area} onChange={(e) => setNewUbi({ ...newUbi, area: e.target.value })} className="border rounded-lg px-3 py-2 text-sm flex-1" />
@@ -128,7 +128,7 @@ export function CatalogosClient(props: {
             <button onClick={addUbi} className="bg-emerald-600 text-white px-4 py-2 rounded-lg text-sm flex items-center gap-1"><Plus size={14} /> Agregar</button>
           </div>
           <table className="w-full text-sm">
-            <thead className="bg-slate-50"><tr><th className="text-left px-3 py-2">Sede</th><th className="text-left px-3 py-2">Área</th><th className="text-left px-3 py-2">Piso</th><th className="text-left px-3 py-2">Estado</th></tr></thead>
+            <thead className="bg-slate-50 dark:bg-slate-950"><tr><th className="text-left px-3 py-2">Sede</th><th className="text-left px-3 py-2">Área</th><th className="text-left px-3 py-2">Piso</th><th className="text-left px-3 py-2">Estado</th></tr></thead>
             <tbody>
               {ubicaciones.map((u) => (
                 <tr key={u.id_ubicacion} className="border-t"><td className="px-3 py-2">{u.sede}</td><td className="px-3 py-2">{u.area_departamento}</td><td className="px-3 py-2">{u.piso_oficina}</td><td className="px-3 py-2">{u.activo ? "ACTIVO" : "ANULADO"}</td></tr>
@@ -140,3 +140,4 @@ export function CatalogosClient(props: {
     </div>
   );
 }
+

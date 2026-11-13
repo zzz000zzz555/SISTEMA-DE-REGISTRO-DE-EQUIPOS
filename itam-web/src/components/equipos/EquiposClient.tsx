@@ -146,7 +146,7 @@ export function EquiposClient(props: {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-slate-800">Inventario de Equipos</h1>
+        <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-200">Inventario de Equipos</h1>
         <button onClick={() => setModalOpen(true)} className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 text-sm font-medium">
           <Plus size={16} /> Nuevo Equipo
         </button>
@@ -180,7 +180,7 @@ export function EquiposClient(props: {
         </button>
       </div>
 
-      <div className="bg-white rounded-xl border shadow-sm p-4 flex flex-wrap gap-3">
+      <div className="bg-white dark:bg-slate-900 rounded-xl border shadow-sm p-4 flex flex-wrap gap-3">
         <div className="flex items-center gap-2 border rounded-lg px-3 py-1.5 flex-1 min-w-[200px]">
           <Search size={16} className="text-slate-400" />
           <input value={search} onChange={(e) => setSearch(e.target.value)} onKeyDown={(e) => {
@@ -204,9 +204,9 @@ export function EquiposClient(props: {
         </select>
       </div>
 
-      <div className="bg-white rounded-xl border shadow-sm overflow-x-auto">
+      <div className="bg-white dark:bg-slate-900 rounded-xl border shadow-sm overflow-x-auto">
         <table className="w-full text-sm">
-          <thead className="bg-slate-50 text-slate-600">
+          <thead className="bg-slate-50 dark:bg-slate-950 text-slate-600 dark:text-slate-400">
             <tr>
               <th className="text-left px-3 py-3">Código Pat.</th>
               <th className="text-left px-3 py-3">Cód. Barras</th>
@@ -221,7 +221,7 @@ export function EquiposClient(props: {
           </thead>
           <tbody>
             {filtered.map((e) => (
-              <tr key={e.id_equipo} className="border-t hover:bg-slate-50">
+              <tr key={e.id_equipo} className="border-t hover:bg-slate-50 dark:bg-slate-950">
                 <td className="px-3 py-2 font-mono text-xs">{e.codigo_patrimonial}</td>
                 <td className="px-3 py-2 font-mono text-xs">{e.codigo_barras}</td>
                 <td className="px-3 py-2">{e.categoria}</td>
@@ -238,15 +238,15 @@ export function EquiposClient(props: {
                 <td className="px-3 py-2 text-right">
                   {e.categoria === "PC/Workstation" && (
                     <>
-                      <button onClick={() => setWsModal(e)} className="p-1.5 hover:bg-slate-100 rounded text-slate-600" title="Ver estación de trabajo">
+                      <button onClick={() => setWsModal(e)} className="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded text-slate-600 dark:text-slate-400" title="Ver estación de trabajo">
                         <Monitor size={15} />
                       </button>
-                      <button onClick={() => setActaModal(e)} className="p-1.5 hover:bg-slate-100 rounded text-slate-600" title="Emitir Acta de Cargo">
+                      <button onClick={() => setActaModal(e)} className="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded text-slate-600 dark:text-slate-400" title="Emitir Acta de Cargo">
                         <FileText size={15} />
                       </button>
                     </>
                   )}
-                  <button onClick={() => setLabelModal(e)} className="p-1.5 hover:bg-slate-100 rounded text-slate-600" title="Generar etiqueta patrimonial">
+                  <button onClick={() => setLabelModal(e)} className="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded text-slate-600 dark:text-slate-400" title="Generar etiqueta patrimonial">
                     <QrCode size={15} />
                   </button>
                 </td>
@@ -258,7 +258,7 @@ export function EquiposClient(props: {
 
       {modalOpen && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 overflow-y-auto">
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-3xl my-8 p-6 space-y-4">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl w-full max-w-3xl my-8 p-6 space-y-4">
             <h2 className="font-bold text-lg">Registrar Equipo</h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -307,11 +307,11 @@ export function EquiposClient(props: {
 
             {specFields.length > 0 && (
               <div className="border-t pt-3">
-                <div className="text-sm font-semibold text-slate-700 mb-2">Especificaciones técnicas</div>
+                <div className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Especificaciones técnicas</div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   {specFields.map((f) => (
                     <div key={f.key} className="flex items-center gap-2">
-                      <label className="text-xs text-slate-600 w-32">{f.label}</label>
+                      <label className="text-xs text-slate-600 dark:text-slate-400 w-32">{f.label}</label>
                       {f.type === "checkbox" ? (
                         <input type="checkbox" checked={!!form.specs[f.key]} onChange={(e) => setForm({ ...form, specs: { ...form.specs, [f.key]: e.target.checked } })} className="accent-indigo-600" />
                       ) : (
@@ -340,7 +340,7 @@ export function EquiposClient(props: {
 
       {labelModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl w-full max-w-md p-6">
             <div className="flex items-center justify-between mb-3">
               <h2 className="font-bold text-lg">Etiqueta Patrimonial</h2>
               <button onClick={() => setLabelModal(null)} className="text-slate-400">✕</button>
@@ -352,7 +352,7 @@ export function EquiposClient(props: {
 
       {wsModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg p-6">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl w-full max-w-lg p-6">
             <div className="flex items-center justify-between mb-3">
               <h2 className="font-bold text-lg">Estación de Trabajo</h2>
               <button onClick={() => setWsModal(null)} className="text-slate-400">✕</button>
@@ -368,7 +368,7 @@ export function EquiposClient(props: {
 
       {actaModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 overflow-y-auto">
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-4xl my-8 p-6">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl w-full max-w-4xl my-8 p-6">
             <div className="flex items-center justify-between mb-3">
               <h2 className="font-bold text-lg">Acta de Cargo Patrimonial</h2>
               <button onClick={() => setActaModal(null)} className="text-slate-400">✕</button>
@@ -380,15 +380,15 @@ export function EquiposClient(props: {
 
       {hwModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg p-6 space-y-3">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl w-full max-w-lg p-6 space-y-3">
             <h2 className="font-bold text-lg">Auto-Registrar Este Equipo</h2>
-            <p className="text-sm text-slate-600">Escanea las especificaciones técnicas de este equipo automáticamente.</p>
+            <p className="text-sm text-slate-600 dark:text-slate-400">Escanea las especificaciones técnicas de este equipo automáticamente.</p>
             <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 text-xs text-amber-800">
               <strong>Requisito:</strong> Ejecuta el agente local BERU en esta PC antes de escanear:
               <code className="block mt-1 bg-amber-100 px-2 py-1 rounded">powershell -ExecutionPolicy Bypass -File public/beru-hardware-agent.ps1</code>
               <a href="/beru-hardware-agent.ps1" download className="text-indigo-600 underline mt-1 inline-block">Descargar agente</a>
             </div>
-            {hwStatus && <div className="text-sm text-slate-700 bg-slate-50 p-2 rounded">{hwStatus}</div>}
+            {hwStatus && <div className="text-sm text-slate-700 dark:text-slate-300 bg-slate-50 dark:bg-slate-950 p-2 rounded">{hwStatus}</div>}
             <div className="flex gap-2 justify-end">
               <button onClick={() => setHwModal(false)} className="px-4 py-2 border rounded-lg text-sm">Cancelar</button>
               <button onClick={async () => {
@@ -427,3 +427,4 @@ export function EquiposClient(props: {
     </div>
   );
 }
+

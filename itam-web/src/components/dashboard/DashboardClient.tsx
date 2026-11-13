@@ -26,7 +26,7 @@ export function DashboardClient({ kpis, porCategoria, porEstado, porSede }: Prop
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-slate-800">Dashboard Ejecutivo BI</h1>
+      <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-200">Dashboard Ejecutivo BI</h1>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <KpiCard title="Total Equipos" value={kpis.totalEquipos} sub={`Valor: S/ ${kpis.valorTotal.toLocaleString()}`} color="indigo" />
@@ -36,8 +36,8 @@ export function DashboardClient({ kpis, porCategoria, porEstado, porSede }: Prop
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <div className="bg-white rounded-xl p-4 shadow-sm border">
-          <h3 className="font-semibold text-slate-700 mb-3">Activos y Valor por Categoría</h3>
+        <div className="bg-white dark:bg-slate-900 rounded-xl p-4 shadow-sm border">
+          <h3 className="font-semibold text-slate-700 dark:text-slate-300 mb-3">Activos y Valor por Categoría</h3>
           <ResponsiveContainer width="100%" height={260}>
             <BarChart data={catData}>
               <XAxis dataKey="name" tick={{ fontSize: 11 }} />
@@ -47,8 +47,8 @@ export function DashboardClient({ kpis, porCategoria, porEstado, porSede }: Prop
             </BarChart>
           </ResponsiveContainer>
         </div>
-        <div className="bg-white rounded-xl p-4 shadow-sm border">
-          <h3 className="font-semibold text-slate-700 mb-3">Distribución por Estado</h3>
+        <div className="bg-white dark:bg-slate-900 rounded-xl p-4 shadow-sm border">
+          <h3 className="font-semibold text-slate-700 dark:text-slate-300 mb-3">Distribución por Estado</h3>
           <ResponsiveContainer width="100%" height={260}>
             <PieChart>
               <Pie data={estadoData} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={90} label>
@@ -61,8 +61,8 @@ export function DashboardClient({ kpis, porCategoria, porEstado, porSede }: Prop
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <div className="bg-white rounded-xl p-4 shadow-sm border">
-          <h3 className="font-semibold text-slate-700 mb-3">Equipos por Área/Departamento</h3>
+        <div className="bg-white dark:bg-slate-900 rounded-xl p-4 shadow-sm border">
+          <h3 className="font-semibold text-slate-700 dark:text-slate-300 mb-3">Equipos por Área/Departamento</h3>
           <ResponsiveContainer width="100%" height={260}>
             <BarChart data={sedeData} layout="vertical">
               <XAxis type="number" />
@@ -72,8 +72,8 @@ export function DashboardClient({ kpis, porCategoria, porEstado, porSede }: Prop
             </BarChart>
           </ResponsiveContainer>
         </div>
-        <div className="bg-white rounded-xl p-4 shadow-sm border">
-          <h3 className="font-semibold text-slate-700 mb-3">Valor Patrimonial por Categoría (S/)</h3>
+        <div className="bg-white dark:bg-slate-900 rounded-xl p-4 shadow-sm border">
+          <h3 className="font-semibold text-slate-700 dark:text-slate-300 mb-3">Valor Patrimonial por Categoría (S/)</h3>
           <ResponsiveContainer width="100%" height={260}>
             <LineChart data={catData}>
               <CartesianGrid strokeDasharray="3 3" />
@@ -104,3 +104,4 @@ function KpiCard({ title, value, sub, color }: { title: string; value: string | 
     </div>
   );
 }
+

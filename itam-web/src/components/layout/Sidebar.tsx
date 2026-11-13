@@ -49,7 +49,7 @@ export function Sidebar({ user, permissions }: Props) {
       <nav className="flex-1 p-3 space-y-4 overflow-y-auto">
         {groups.map((g) => (
           <div key={g.label}>
-            <div className="px-2 mb-1 text-[10px] font-semibold uppercase tracking-wider text-slate-500">{g.label}</div>
+            <div className="px-2 mb-1 text-[10px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">{g.label}</div>
             <div className="space-y-0.5">
               {g.items.map((item) => {
                 if (item.perm && !permissions.includes(item.perm) && user.id_rol !== 1) return null;
@@ -78,10 +78,11 @@ export function Sidebar({ user, permissions }: Props) {
         </div>
         <div className="flex-1 min-w-0">
           <div className="text-xs font-medium text-white truncate">{user.nombres} {user.apellidos}</div>
-          <div className="text-[10px] text-slate-500 truncate">{user.correo_corporativo}</div>
+          <div className="text-[10px] text-slate-500 dark:text-slate-400 truncate">{user.correo_corporativo}</div>
         </div>
         <LogoutButton />
       </div>
     </aside>
   );
 }
+

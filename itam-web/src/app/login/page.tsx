@@ -42,18 +42,18 @@ export default function LoginPage() {
         </div>
       </div>
 
-      <div className="flex items-center justify-center p-8 bg-slate-50">
-        <div className="bg-white rounded-2xl shadow-xl border border-slate-200 p-8 w-full max-w-md">
+      <div className="flex items-center justify-center p-8 bg-slate-50 dark:bg-slate-950">
+        <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-slate-200 dark:border-slate-800 p-8 w-full max-w-md">
           <div className="text-center mb-6">
             <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-indigo-600 text-white mb-3">
               <ShieldCheck size={22} />
             </div>
-            <h2 className="text-2xl font-bold text-slate-800">Iniciar Sesión</h2>
-            <p className="text-slate-500 text-sm">Acceso al sistema BERU</p>
+            <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-200">Iniciar Sesión</h2>
+            <p className="text-slate-500 dark:text-slate-400 text-sm">Acceso al sistema BERU</p>
           </div>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">Usuario o Correo</label>
+              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Usuario o Correo</label>
               <div className="relative">
                 <User size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
                 <input
@@ -67,7 +67,7 @@ export default function LoginPage() {
               </div>
             </div>
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">Contraseña</label>
+              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Contraseña</label>
               <div className="relative">
                 <Lock size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
                 <input
@@ -78,7 +78,7 @@ export default function LoginPage() {
                   placeholder="••••••••"
                   required
                 />
-                <button type="button" onClick={() => setShowPwd(!showPwd)} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
+                <button type="button" onClick={() => setShowPwd(!showPwd)} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:text-slate-400">
                   {showPwd ? <EyeOff size={16} /> : <Eye size={16} />}
                 </button>
               </div>
@@ -92,9 +92,9 @@ export default function LoginPage() {
               {loading ? "Ingresando..." : "Iniciar Sesión"}
             </button>
           </form>
-          <div className="mt-6 p-4 bg-slate-50 border border-slate-200 rounded-xl">
-            <div className="text-xs text-slate-500 mb-1 font-semibold">Medidas de seguridad activas</div>
-            <ul className="text-xs text-slate-500 space-y-1">
+          <div className="mt-6 p-4 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl">
+            <div className="text-xs text-slate-500 dark:text-slate-400 mb-1 font-semibold">Medidas de seguridad activas</div>
+            <ul className="text-xs text-slate-500 dark:text-slate-400 space-y-1">
               <li>• Contraseñas con mínimo 6 caracteres, letras, números y carácter especial</li>
               <li>• Bloqueo automático por 5 minutos tras 5 intentos fallidos</li>
               <li>• Sesión con token hasheado y registro forense de acceso</li>

@@ -28,12 +28,12 @@ export function MantenimientosClient({ mantenimientos: initial, equipos }: { man
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-slate-800">Mantenimientos</h1>
+        <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-200">Mantenimientos</h1>
         <button onClick={() => setOpen(true)} className="bg-emerald-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 text-sm"><Plus size={16} /> Nuevo</button>
       </div>
-      <div className="bg-white rounded-xl border shadow-sm overflow-x-auto">
+      <div className="bg-white dark:bg-slate-900 rounded-xl border shadow-sm overflow-x-auto">
         <table className="w-full text-sm">
-          <thead className="bg-slate-50"><tr><th className="text-left px-3 py-3">Equipo</th><th className="text-left px-3 py-3">Tipo</th><th className="text-left px-3 py-3">Falla</th><th className="text-left px-3 py-3">Costo</th><th className="text-left px-3 py-3">Estado</th><th className="text-left px-3 py-3">Inicio</th></tr></thead>
+          <thead className="bg-slate-50 dark:bg-slate-950"><tr><th className="text-left px-3 py-3">Equipo</th><th className="text-left px-3 py-3">Tipo</th><th className="text-left px-3 py-3">Falla</th><th className="text-left px-3 py-3">Costo</th><th className="text-left px-3 py-3">Estado</th><th className="text-left px-3 py-3">Inicio</th></tr></thead>
           <tbody>
             {items.map((m) => (
               <tr key={m.id_mantenimiento} className="border-t">
@@ -42,7 +42,7 @@ export function MantenimientosClient({ mantenimientos: initial, equipos }: { man
                 <td className="px-3 py-2 truncate max-w-xs">{m.descripcion_falla}</td>
                 <td className="px-3 py-2">S/ {Number(m.costo).toLocaleString()}</td>
                 <td className="px-3 py-2">{m.estado_servicio}</td>
-                <td className="px-3 py-2 text-slate-500">{new Date(m.fecha_registro).toLocaleString()}</td>
+                <td className="px-3 py-2 text-slate-500 dark:text-slate-400">{new Date(m.fecha_registro).toLocaleString()}</td>
               </tr>
             ))}
           </tbody>
@@ -51,7 +51,7 @@ export function MantenimientosClient({ mantenimientos: initial, equipos }: { man
 
       {open && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg p-6 space-y-3">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl w-full max-w-lg p-6 space-y-3">
             <h2 className="font-bold text-lg">Nuevo Mantenimiento</h2>
             <select value={form.id_equipo} onChange={(e) => setForm({ ...form, id_equipo: e.target.value })} className="w-full border rounded-lg px-3 py-2 text-sm">
               <option value="">Equipo</option>
@@ -73,3 +73,4 @@ export function MantenimientosClient({ mantenimientos: initial, equipos }: { man
     </div>
   );
 }
+

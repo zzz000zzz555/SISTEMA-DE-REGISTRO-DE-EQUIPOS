@@ -94,7 +94,7 @@ export function RolesClient({
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-slate-800">Gestión de Roles</h1>
+        <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-200">Gestión de Roles</h1>
         <button onClick={openNew} className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 text-sm font-medium">
           <Plus size={16} /> Nuevo
         </button>
@@ -116,7 +116,7 @@ export function RolesClient({
         </button>
       </div>
 
-      <div className="bg-white rounded-xl border shadow-sm">
+      <div className="bg-white dark:bg-slate-900 rounded-xl border shadow-sm">
         <div className="p-4 flex flex-wrap items-center gap-3 border-b">
           <div className="flex items-center gap-2 border rounded-lg px-3 py-1.5 flex-1 max-w-md">
             <Search size={16} className="text-slate-400" />
@@ -142,7 +142,7 @@ export function RolesClient({
 
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
-            <thead className="bg-slate-50 text-slate-600">
+            <thead className="bg-slate-50 dark:bg-slate-950 text-slate-600 dark:text-slate-400">
               <tr>
                 <th className="text-left px-4 py-3">Título</th>
                 <th className="text-left px-4 py-3">Descripción</th>
@@ -153,9 +153,9 @@ export function RolesClient({
             </thead>
             <tbody>
               {paged.map((r) => (
-                <tr key={r.id_rol} className="border-t hover:bg-slate-50">
+                <tr key={r.id_rol} className="border-t hover:bg-slate-50 dark:bg-slate-950">
                   <td className="px-4 py-3 font-medium">{r.nombre_rol}</td>
-                  <td className="px-4 py-3 text-slate-500">{r.descripcion ?? "—"}</td>
+                  <td className="px-4 py-3 text-slate-500 dark:text-slate-400">{r.descripcion ?? "—"}</td>
                   <td className="px-4 py-3">{r.nivel_jerarquia}</td>
                   <td className="px-4 py-3">
                     <span className={`px-2 py-0.5 rounded text-xs font-medium ${r.activo ? "bg-emerald-100 text-emerald-700" : "bg-red-100 text-red-700"}`}>
@@ -164,9 +164,9 @@ export function RolesClient({
                   </td>
                   <td className="px-4 py-3 text-right">
                     <div className="inline-flex gap-1">
-                      <button onClick={() => openEdit(r)} className="p-1.5 hover:bg-slate-100 rounded" title="Editar"><Edit2 size={15} /></button>
-                      <button onClick={() => toggleActivo(r)} className="p-1.5 hover:bg-slate-100 rounded" title="Activar/Anular"><Power size={15} /></button>
-                      <button className="p-1.5 hover:bg-slate-100 rounded" title="Más"><MoreVertical size={15} /></button>
+                      <button onClick={() => openEdit(r)} className="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded" title="Editar"><Edit2 size={15} /></button>
+                      <button onClick={() => toggleActivo(r)} className="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded" title="Activar/Anular"><Power size={15} /></button>
+                      <button className="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded" title="Más"><MoreVertical size={15} /></button>
                     </div>
                   </td>
                 </tr>
@@ -178,7 +178,7 @@ export function RolesClient({
           </table>
         </div>
 
-        <div className="p-4 flex items-center justify-between text-sm text-slate-500">
+        <div className="p-4 flex items-center justify-between text-sm text-slate-500 dark:text-slate-400">
           <span>Página {page} de {totalPages}</span>
           <div className="flex gap-2">
             <button disabled={page <= 1} onClick={() => setPage((p) => p - 1)} className="px-3 py-1 border rounded disabled:opacity-40">Anterior</button>
@@ -189,10 +189,10 @@ export function RolesClient({
 
       {modalOpen && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-3xl max-h-[90vh] flex flex-col">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl w-full max-w-3xl max-h-[90vh] flex flex-col">
             <div className="p-4 border-b flex items-center justify-between">
               <h2 className="font-bold text-lg">{editing ? "Editar Rol" : "Nuevo Rol"}</h2>
-              <button onClick={() => setModalOpen(false)} className="text-slate-400 hover:text-slate-600">✕</button>
+              <button onClick={() => setModalOpen(false)} className="text-slate-400 hover:text-slate-600 dark:text-slate-400">✕</button>
             </div>
             <div className="p-4 flex gap-2">
               <input
@@ -224,3 +224,4 @@ export function RolesClient({
     </div>
   );
 }
+

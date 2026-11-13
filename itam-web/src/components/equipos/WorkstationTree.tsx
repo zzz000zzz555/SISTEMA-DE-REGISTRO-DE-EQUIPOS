@@ -20,16 +20,16 @@ export function WorkstationTree({ parent, hijos, onUnlink }: { parent: Inventari
         <Monitor size={20} className="text-indigo-600" />
         <div>
           <div className="font-mono text-sm font-bold">{parent.codigo_patrimonial}</div>
-          <div className="text-xs text-slate-500">{parent.marca} {parent.modelo} · {parent.estado}</div>
+          <div className="text-xs text-slate-500 dark:text-slate-400">{parent.marca} {parent.modelo} · {parent.estado}</div>
         </div>
       </div>
-      <div className="pl-6 space-y-2 border-l-2 border-slate-200">
+      <div className="pl-6 space-y-2 border-l-2 border-slate-200 dark:border-slate-800">
         {hijos.map((h) => {
           const Icon = iconMap[h.categoria ?? ""] ?? Monitor;
           return (
-            <div key={h.id_equipo} className="flex items-center justify-between p-2 bg-white border rounded-lg">
+            <div key={h.id_equipo} className="flex items-center justify-between p-2 bg-white dark:bg-slate-900 border rounded-lg">
               <div className="flex items-center gap-2">
-                <Icon size={16} className="text-slate-500" />
+                <Icon size={16} className="text-slate-500 dark:text-slate-400" />
                 <div>
                   <div className="font-mono text-xs font-semibold">{h.codigo_patrimonial}</div>
                   <div className="text-xs text-slate-400">{h.categoria} · {h.marca} {h.modelo}</div>
@@ -46,3 +46,4 @@ export function WorkstationTree({ parent, hijos, onUnlink }: { parent: Inventari
     </div>
   );
 }
+

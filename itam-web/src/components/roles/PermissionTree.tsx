@@ -93,7 +93,7 @@ export function PermissionTree({ modulos, permisos, selected, onChange, search }
             onChange={() => toggleModule(m.id_modulo)}
             className="accent-purple-600"
           />
-          <span className="font-semibold text-slate-700 text-sm">{m.nombre_modulo}</span>
+          <span className="font-semibold text-slate-700 dark:text-slate-300 text-sm">{m.nombre_modulo}</span>
         </div>
         {isExp && (
           <div>
@@ -105,7 +105,7 @@ export function PermissionTree({ modulos, permisos, selected, onChange, search }
                   onChange={() => togglePerm(p.id_permiso)}
                   className="accent-purple-600"
                 />
-                <span className="text-sm text-slate-600">{p.nombre_permiso}</span>
+                <span className="text-sm text-slate-600 dark:text-slate-400">{p.nombre_permiso}</span>
                 <span className="text-xs text-slate-400">({p.accion})</span>
               </div>
             ))}
@@ -119,8 +119,9 @@ export function PermissionTree({ modulos, permisos, selected, onChange, search }
   const roots = modulos.filter((m) => m.id_modulo_padre === null);
 
   return (
-    <div className="border rounded-lg p-3 bg-slate-50">
+    <div className="border rounded-lg p-3 bg-slate-50 dark:bg-slate-950">
       {roots.map((m) => renderModule(m, 0))}
     </div>
   );
 }
+

@@ -16,12 +16,12 @@ export function ActaCargo({ parent, hijos, usuario }: { parent: InventarioView; 
   const all = [parent, ...hijos];
   return (
     <div className="space-y-3">
-      <div id="acta-cargo" className="bg-white p-8 max-w-3xl mx-auto border">
+      <div id="acta-cargo" className="bg-white dark:bg-slate-900 p-8 max-w-3xl mx-auto border">
         <div className="flex items-center justify-between border-b pb-4 mb-4">
           <BeruLogo size="md" />
           <div className="text-right">
-            <div className="font-bold text-slate-800">ACTA DE ASIGNACIÓN / CARGO PATRIMONIAL</div>
-            <div className="text-xs text-slate-500">N° ACTA-{parent.codigo_patrimonial} · {new Date().toLocaleString()}</div>
+            <div className="font-bold text-slate-800 dark:text-slate-200">ACTA DE ASIGNACIÓN / CARGO PATRIMONIAL</div>
+            <div className="text-xs text-slate-500 dark:text-slate-400">N° ACTA-{parent.codigo_patrimonial} · {new Date().toLocaleString()}</div>
           </div>
         </div>
         <div className="mb-4 text-sm">
@@ -31,7 +31,7 @@ export function ActaCargo({ parent, hijos, usuario }: { parent: InventarioView; 
         </div>
         <table className="w-full text-xs border-collapse">
           <thead>
-            <tr className="bg-slate-100">
+            <tr className="bg-slate-100 dark:bg-slate-800">
               <th className="border px-2 py-1 text-left">Código Patrimonial</th>
               <th className="border px-2 py-1 text-left">Código Barras</th>
               <th className="border px-2 py-1 text-left">Categoría</th>

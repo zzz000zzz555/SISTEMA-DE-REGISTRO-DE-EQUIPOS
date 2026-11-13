@@ -9,7 +9,7 @@ export function BeruLogo({ size = "md" }: { size?: "sm" | "md" | "lg" }) {
         <Cpu size={size === "sm" ? 16 : size === "lg" ? 24 : 18} className="text-white" strokeWidth={2} />
       </div>
       <div className="flex items-baseline gap-1.5">
-        <span className={`${text} font-extrabold tracking-tight text-slate-900`}>BERU</span>
+        <span className={`${text} font-extrabold tracking-tight text-slate-900 dark:text-slate-100`}>BERU</span>
         <span className="text-[10px] font-semibold uppercase tracking-wider text-indigo-600 bg-indigo-50 border border-indigo-200 rounded px-1.5 py-0.5">Enterprise v2.5</span>
       </div>
     </div>

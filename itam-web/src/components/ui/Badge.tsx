@@ -8,7 +8,7 @@ export function Badge({ variant = "neutral", children, className }: { variant?: 
     mant: "badge-mant",
     baja: "badge-baja",
     info: "badge-info",
-    neutral: "bg-slate-100 text-slate-600 border-slate-200",
+    neutral: "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-800",
   };
   return <span className={cn("badge", map[variant], className)}>{children}</span>;
 }
@@ -20,3 +20,4 @@ export function statusVariant(status: string): Variant {
   if (s.includes("BAJA") || s.includes("ANULADO") || s.includes("CESADO") || s.includes("BLOQUEADO") || s.includes("MALOGRADO")) return "baja";
   return "neutral";
 }
+

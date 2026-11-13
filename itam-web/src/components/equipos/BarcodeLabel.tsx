@@ -32,8 +32,8 @@ export function BarcodeLabel({ codigo, codigoBarras, categoria }: { codigo: stri
 
   return (
     <div className="space-y-3">
-      <div id="label-print" className="border rounded-lg p-4 bg-white w-72 mx-auto">
-        <div className="text-center text-xs font-semibold text-slate-500 uppercase tracking-wider">INVENTARIO PATRIMONIAL TI</div>
+      <div id="label-print" className="border rounded-lg p-4 bg-white dark:bg-slate-900 w-72 mx-auto">
+        <div className="text-center text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">INVENTARIO PATRIMONIAL TI</div>
         <div className="text-center text-sm font-bold mt-1">{categoria}</div>
         <div className="flex justify-center mt-2">
           <QRCode value={codigoBarras} size={80} />
@@ -49,3 +49,4 @@ export function BarcodeLabel({ codigo, codigoBarras, categoria }: { codigo: stri
     </div>
   );
 }
+

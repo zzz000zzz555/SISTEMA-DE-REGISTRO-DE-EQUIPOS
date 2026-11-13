@@ -55,7 +55,7 @@ export function CommandPalette() {
   return (
     <div className="fixed inset-0 z-50 flex items-start justify-center pt-24 bg-black/40 backdrop-blur-sm" onClick={() => setOpen(false)}>
       <div className="w-full max-w-xl" onClick={(e) => e.stopPropagation()}>
-        <Command className="bg-white rounded-xl shadow-2xl border overflow-hidden">
+        <Command className="bg-white dark:bg-slate-900 rounded-xl shadow-2xl border overflow-hidden">
           <div className="flex items-center gap-2 px-4 border-b">
             <Search size={16} className="text-slate-400" />
             <Command.Input
@@ -73,7 +73,7 @@ export function CommandPalette() {
                 <Command.Item
                   key={n.href}
                   onSelect={() => { window.location.href = "/SISTEMA-DE-REGISTRO-DE-EQUIPOS" + n.href + "/"; }}
-                  className="flex items-center gap-2 px-2 py-1.5 rounded cursor-pointer hover:bg-slate-100 text-sm"
+                  className="flex items-center gap-2 px-2 py-1.5 rounded cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-800 text-sm"
                 >
                   <n.icon size={14} /> {n.label}
                 </Command.Item>
@@ -84,7 +84,7 @@ export function CommandPalette() {
                 <Command.Item
                   key={e.id_equipo}
                   onSelect={() => { window.location.href = `/SISTEMA-DE-REGISTRO-DE-EQUIPOS/equipos/?eq=${e.id_equipo}`; }}
-                  className="flex items-center gap-2 px-2 py-1.5 rounded cursor-pointer hover:bg-slate-100 text-sm font-mono"
+                  className="flex items-center gap-2 px-2 py-1.5 rounded cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-800 text-sm font-mono"
                 >
                   <Monitor size={14} /> {e.codigo_patrimonial} <span className="text-slate-400 text-xs">{e.codigo_barras}</span>
                 </Command.Item>
@@ -96,3 +96,4 @@ export function CommandPalette() {
     </div>
   );
 }
+

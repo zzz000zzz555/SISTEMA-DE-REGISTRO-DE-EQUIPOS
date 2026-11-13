@@ -13,7 +13,7 @@ export default function AuditoriaSesionesPage() {
       .then(({ data }) => { setRows(data ?? []); setLoading(false); });
   }, []);
   return (
-    <PermissionGuard permiso="VER_AUDITORIA_SESIONES" fallback={<div className="text-slate-500">No tienes permiso para ver la auditoría de sesiones.</div>}>
+    <PermissionGuard permiso="VER_AUDITORIA_SESIONES" fallback={<div className="text-slate-500 dark:text-slate-400">No tienes permiso para ver la auditoría de sesiones.</div>}>
       <div className="space-y-4">
         <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100">Auditoría de Sesiones y Accesos</h1>
         {loading ? <div className="text-slate-400">Cargando...</div> : (
@@ -38,7 +38,7 @@ export default function AuditoriaSesionesPage() {
                     <td className="px-3 py-2">{r.ciudad}, {r.region}, {r.pais}</td>
                     <td className="px-3 py-2 text-xs">{r.so_navegador}</td>
                     <td className="px-3 py-2">{r.dispositivo}</td>
-                    <td className="px-3 py-2 text-slate-500">{new Date(r.fecha_hora_inicio).toLocaleString()}</td>
+                    <td className="px-3 py-2 text-slate-500 dark:text-slate-400">{new Date(r.fecha_hora_inicio).toLocaleString()}</td>
                     <td className="px-3 py-2">{r.estado}</td>
                   </tr>
                 ))}

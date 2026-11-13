@@ -19,8 +19,8 @@ export function JsonDiffViewer({ oldData, newData }: { oldData: Record<string, u
         <div className="bg-red-50/50 border border-red-100 rounded-lg p-3 text-xs font-mono space-y-1 max-h-96 overflow-auto">
           {rows.map((r) => (
             <div key={r.key} className={r.changed ? "bg-red-100 rounded px-1" : ""}>
-              <span className="text-slate-500">{r.key}:</span>{" "}
-              <span className={r.changed ? "text-red-700 font-semibold" : "text-slate-700"}>{JSON.stringify(r.oldVal)}</span>
+              <span className="text-slate-500 dark:text-slate-400">{r.key}:</span>{" "}
+              <span className={r.changed ? "text-red-700 font-semibold" : "text-slate-700 dark:text-slate-300"}>{JSON.stringify(r.oldVal)}</span>
             </div>
           ))}
         </div>
@@ -30,8 +30,8 @@ export function JsonDiffViewer({ oldData, newData }: { oldData: Record<string, u
         <div className="bg-emerald-50/50 border border-emerald-100 rounded-lg p-3 text-xs font-mono space-y-1 max-h-96 overflow-auto">
           {rows.map((r) => (
             <div key={r.key} className={r.changed ? "bg-emerald-100 rounded px-1" : ""}>
-              <span className="text-slate-500">{r.key}:</span>{" "}
-              <span className={r.changed ? "text-emerald-700 font-semibold" : "text-slate-700"}>{JSON.stringify(r.newVal)}</span>
+              <span className="text-slate-500 dark:text-slate-400">{r.key}:</span>{" "}
+              <span className={r.changed ? "text-emerald-700 font-semibold" : "text-slate-700 dark:text-slate-300"}>{JSON.stringify(r.newVal)}</span>
             </div>
           ))}
         </div>
@@ -39,3 +39,4 @@ export function JsonDiffViewer({ oldData, newData }: { oldData: Record<string, u
     </div>
   );
 }
+
