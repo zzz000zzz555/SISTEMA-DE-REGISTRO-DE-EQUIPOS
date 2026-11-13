@@ -1,29 +1,26 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { loginClient } from "@/lib/auth-client";
-import { useRouter } from "next/navigation";
+
 import { ShieldCheck, User, Lock, Eye, EyeOff } from "lucide-react";
 import { BeruLogo } from "@/components/ui/BeruLogo";
-import { withBase } from "@/lib/utils";
 
 export default function LoginPage() {
-  const userRef = useRef<HTMLInputElement>(null);
-  const passRef = useRef<HTMLInputElement>(null);
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPwd, setShowPwd] = useState(false);
-  // const router = useRouter();
+
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    const username = userRef.current?.value ?? "";
-    const password = passRef.current?.value ?? "";
     setLoading(true);
     setError("");
     const res = await loginClient(username, password);
     setLoading(false);
-    if (res.ok) window.location.href = withBase("/dashboard/");
+    if (res.ok) window.location.href = "/SISTEMA-DE-REGISTRO-DE-EQUIPOS/dashboard/";
     else setError(res.message);
   }
 
@@ -60,8 +57,9 @@ export default function LoginPage() {
               <div className="relative">
                 <User size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
                 <input
-                  ref={userRef}
                   type="text"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
                   className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-indigo-600 focus:border-indigo-600 outline-none"
                   placeholder="admin"
                   required
@@ -73,8 +71,9 @@ export default function LoginPage() {
               <div className="relative">
                 <Lock size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
                 <input
-                  ref={passRef}
                   type={showPwd ? "text" : "password"}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                   className="w-full pl-10 pr-12 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-indigo-600 focus:border-indigo-600 outline-none"
                   placeholder="••••••••"
                   required
