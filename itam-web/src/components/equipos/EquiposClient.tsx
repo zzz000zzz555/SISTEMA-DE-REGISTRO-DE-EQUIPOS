@@ -70,6 +70,8 @@ export function EquiposClient(props: {
   const [labelModal, setLabelModal] = useState<InventarioView | null>(null);
   const [wsModal, setWsModal] = useState<InventarioView | null>(null);
   const [actaModal, setActaModal] = useState<InventarioView | null>(null);
+  const [hwModal, setHwModal] = useState(false);
+  const [hwStatus, setHwStatus] = useState("");
 
   // form state
   const [form, setForm] = useState({
@@ -147,6 +149,9 @@ export function EquiposClient(props: {
         <h1 className="text-2xl font-bold text-slate-800">Inventario de Equipos</h1>
         <button onClick={() => setModalOpen(true)} className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 text-sm font-medium">
           <Plus size={16} /> Nuevo Equipo
+        </button>
+        <button onClick={() => { setHwModal(true); setHwStatus(""); }} className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 text-sm font-medium">
+          <Monitor size={16} /> Auto-Registrar Este Equipo
         </button>
         <button onClick={() => exportToExcel({
           title: "BERU — Inventario de Equipos",
@@ -369,6 +374,53 @@ export function EquiposClient(props: {
               <button onClick={() => setActaModal(null)} className="text-slate-400">✕</button>
             </div>
             <ActaCargo parent={actaModal} hijos={inventario.filter((e) => e.id_equipo_padre === actaModal.id_equipo)} usuario="admin@sistema.com" />
+          </div>
+        </div>
+      )}
+
+      {hwModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg p-6 space-y-3">
+            <h2 className="font-bold text-lg">Auto-Registrar Este Equipo</h2>
+            <p className="text-sm text-slate-600">Escanea las especificaciones técnicas de este equipo automáticamente.</p>
+            <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 text-xs text-amber-800">
+              <strong>Requisito:</strong> Ejecuta el agente local BERU en esta PC antes de escanear:
+              <code className="block mt-1 bg-amber-100 px-2 py-1 rounded">powershell -ExecutionPolicy Bypass -File public/beru-hardware-agent.ps1</code>
+              <a href="/beru-hardware-agent.ps1" download className="text-indigo-600 underline mt-1 inline-block">Descargar agente</a>
+            </div>
+            {hwStatus && <div className="text-sm text-slate-700 bg-slate-50 p-2 rounded">{hwStatus}</div>}
+            <div className="flex gap-2 justify-end">
+              <button onClick={() => setHwModal(false)} className="px-4 py-2 border rounded-lg text-sm">Cancelar</button>
+              <button onClick={async () => {
+                setHwStatus("Escaneando hardware del sistema...");
+                try {
+                  const res = await fetch("http://localhost:9191/scan-hardware");
+                  const data = await res.json();
+                  setHwStatus("Escaneado: " + (data.hostname ?? "") + " · " + (data.procesador?.modelo ?? "") + " · " + (data.ram?.total_gb ?? 0) + "GB RAM");
+                  // Prefill form
+                  setForm((f) => ({
+                    ...f,
+                    codigo_patrimonial: "CPU-" + Date.now().toString().slice(-4),
+                    codigo_barras: "BC-" + Date.now().toString().slice(-6),
+                    numero_serie: data.serie_bios ?? "",
+                    id_categoria: categorias.find((c) => c.nombre === "PC/Workstation")?.id_categoria ?? 0,
+                    tipo_conexion: "RJ45 / Wi-Fi",
+                    direccion_mac: data.mac ?? "",
+                    direccion_ip: data.ip_local ?? "",
+                    specs: {
+                      procesador: data.procesador?.modelo ?? "",
+                      ram_gb: data.ram?.total_gb ?? 0,
+                      almacenamiento: (data.discos ?? []).map((d: { size_gb: number }) => d.size_gb + "GB").join(", "),
+                    },
+                    observaciones: "Auto-registrado por BERU Hardware Agent. OS: " + (data.sistema_operativo ?? ""),
+                  }));
+                  setModalOpen(true);
+                  setHwModal(false);
+                } catch {
+                  setHwStatus("No se pudo conectar al agente local. Verifica que esté corriendo en localhost:9191.");
+                }
+              }} className="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm">Escanear</button>
+            </div>
           </div>
         </div>
       )}

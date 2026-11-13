@@ -34,6 +34,7 @@ const groups = [
       { href: "/modulos", label: "Gestión de Módulos", icon: Boxes, perm: null },
       { href: "/usuarios", label: "Usuarios y Sesiones", icon: Users, perm: null },
       { href: "/auditoria", label: "Auditoría Forense", icon: FileText, perm: null },
+      { href: "/auditoria-sesiones", label: "Auditoría de Sesiones", icon: FileText, perm: "VER_AUDITORIA_SESIONES" },
     ],
   },
 ];

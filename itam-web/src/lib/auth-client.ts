@@ -54,6 +54,31 @@ export async function loginClient(identificador: string, password: string): Prom
     id_sesion: res.id_sesion ?? "",
   };
   setSession(session);
+
+  // Capturar IP publica + geolocalizacion + user agent (audit de sesion)
+  try {
+    const ipRes = await fetch("https://ipapi.co/json/");
+    const ipData = await ipRes.json();
+    const ua = navigator.userAgent;
+    const soNav = ua.includes("Windows") ? "Windows" : ua.includes("Mac") ? "macOS" : ua.includes("Linux") ? "Linux" : "Otro";
+    const nav = ua.includes("Chrome") ? "Chrome" : ua.includes("Firefox") ? "Firefox" : ua.includes("Safari") ? "Safari" : "Otro";
+    await createClient().from("auditoria_sesiones").insert({
+      id_usuario: (res.usuario as AuthUser).id_usuario,
+      ip_publica: ipData.ip,
+      ciudad: ipData.city,
+      region: ipData.region,
+      pais: ipData.country_name,
+      latitud: ipData.latitude,
+      longitud: ipData.longitude,
+      user_agent: ua,
+      so_navegador: soNav + " / " + nav,
+      dispositivo: /Mobi|Android/i.test(ua) ? "Mobile" : "Desktop",
+      estado: "ACTIVA",
+    });
+  } catch (e) {
+    // No bloquear login si falla la auditoria
+  }
+
   return { ok: true, message: res.mensaje };
 }
 
