@@ -109,10 +109,13 @@ export default function LoginPage() {
             </button>
           </form>
           <div className="mt-6 p-4 bg-slate-50 border border-slate-200 rounded-xl">
-            <div className="text-xs text-slate-500 mb-2">Acceso rápido de demostración</div>
-            <button onClick={fillDemo} className="text-sm text-indigo-600 hover:underline font-medium">
-              Autocompletar Credenciales Admin (admin / Admin@123)
-            </button>
+            <div className="text-xs text-slate-500 mb-1 font-semibold">Medidas de seguridad activas</div>
+            <ul className="text-xs text-slate-500 space-y-1">
+              <li>• Contraseñas con mínimo 6 caracteres, letras, números y símbodo especial</li>
+              <li>• Bloqueo automático por 5 minutos tras 5 intentos fallidos</li>
+              <li>• Sesión con token hasheado y registro forense de acceso</li>
+              <li>• Validación de vigencia contractual del usuario</li>
+            </ul>
           </div>
         </div>
       </div>
