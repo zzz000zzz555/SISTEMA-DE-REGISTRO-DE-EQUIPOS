@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { Plus, Search, Download, QrCode, Printer, Monitor, FileText } from "lucide-react";
+import { Plus, Search, Download, QrCode, Printer, Monitor, FileText, Eye, Pencil, Ban, Trash2 } from "lucide-react";
 import { exportToExcel } from "@/lib/excel";
 import { BarcodeLabel } from "./BarcodeLabel";
 import { WorkstationTree } from "./WorkstationTree";
@@ -72,6 +72,8 @@ export function EquiposClient(props: {
   const [actaModal, setActaModal] = useState<InventarioView | null>(null);
   const [hwModal, setHwModal] = useState(false);
   const [hwStatus, setHwStatus] = useState("");
+  const [selected, setSelected] = useState<Set<string>>(new Set());
+  const [viewEquipo, setViewEquipo] = useState<InventarioView | null>(null);
 
   // form state
   const [form, setForm] = useState({
@@ -153,7 +155,9 @@ export function EquiposClient(props: {
         <button onClick={() => { setHwModal(true); setHwStatus(""); }} className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 text-sm font-medium">
           <Monitor size={16} /> Auto-Registrar Este Equipo
         </button>
-        <button onClick={() => exportToExcel({
+        <button onClick={() => {
+          const rows = selected.size > 0 ? filtered.filter((e) => selected.has(e.id_equipo)) : filtered;
+          exportToExcel({
           title: "BERU — Inventario de Equipos",
           exportedBy: "admin",
           columns: [
@@ -169,13 +173,14 @@ export function EquiposClient(props: {
             { header: "Valor Compra", key: "valor_compra", width: 12, currency: true },
             { header: "IP", key: "direccion_ip", width: 14 },
           ],
-          rows: filtered as unknown as Record<string, unknown>[],
+          rows: rows as unknown as Record<string, unknown>[],
           summary: [
-            { label: "Total registros", value: filtered.length },
-            { label: "Valor patrimonial total", value: `S/ ${filtered.reduce((s, e) => s + Number(e.valor_compra ?? 0), 0).toLocaleString()}` },
+            { label: "Total registros", value: rows.length },
+            { label: "Valor patrimonial total", value: `S/ ${rows.reduce((s, e) => s + Number(e.valor_compra ?? 0), 0).toLocaleString()}` },
           ],
           filename: "inventario_equipos.xlsx",
-        })} className="bg-slate-700 hover:bg-slate-800 text-white px-4 py-2 rounded-lg flex items-center gap-2 text-sm font-medium">
+        });
+        }} className="bg-slate-700 hover:bg-slate-800 text-white px-4 py-2 rounded-lg flex items-center gap-2 text-sm font-medium">
           <Download size={16} /> Exportar Excel
         </button>
       </div>
@@ -208,6 +213,12 @@ export function EquiposClient(props: {
         <table className="w-full text-sm">
           <thead className="bg-slate-50 dark:bg-slate-950 text-slate-600 dark:text-slate-400">
             <tr>
+              <th className="px-3 py-3 w-8">
+                <input type="checkbox" checked={filtered.length > 0 && selected.size === filtered.length} onChange={(e) => {
+                  if (e.target.checked) setSelected(new Set(filtered.map((x) => x.id_equipo)));
+                  else setSelected(new Set());
+                }} className="accent-indigo-600" />
+              </th>
               <th className="text-left px-3 py-3">Código Pat.</th>
               <th className="text-left px-3 py-3">Cód. Barras</th>
               <th className="text-left px-3 py-3">Categoría</th>
@@ -221,7 +232,14 @@ export function EquiposClient(props: {
           </thead>
           <tbody>
             {filtered.map((e) => (
-              <tr key={e.id_equipo} className="border-t hover:bg-slate-50 dark:bg-slate-950">
+              <tr key={e.id_equipo} className="border-t hover:bg-slate-50 dark:hover:bg-slate-800">
+                <td className="px-3 py-2">
+                  <input type="checkbox" checked={selected.has(e.id_equipo)} onChange={(ev) => {
+                    const n = new Set(selected);
+                    if (ev.target.checked) n.add(e.id_equipo); else n.delete(e.id_equipo);
+                    setSelected(n);
+                  }} className="accent-indigo-600" />
+                </td>
                 <td className="px-3 py-2 font-mono text-xs">{e.codigo_patrimonial}</td>
                 <td className="px-3 py-2 font-mono text-xs">{e.codigo_barras}</td>
                 <td className="px-3 py-2">{e.categoria}</td>
@@ -236,19 +254,32 @@ export function EquiposClient(props: {
                 <td className="px-3 py-2 text-xs">{e.equipo_padre_codigo_patrimonial ?? "—"}</td>
                 <td className="px-3 py-2">S/ {Number(e.valor_compra ?? 0).toLocaleString()}</td>
                 <td className="px-3 py-2 text-right">
-                  {e.categoria === "PC/Workstation" && (
-                    <>
-                      <button onClick={() => setWsModal(e)} className="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded text-slate-600 dark:text-slate-400" title="Ver estación de trabajo">
-                        <Monitor size={15} />
-                      </button>
-                      <button onClick={() => setActaModal(e)} className="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded text-slate-600 dark:text-slate-400" title="Emitir Acta de Cargo">
-                        <FileText size={15} />
-                      </button>
-                    </>
-                  )}
-                  <button onClick={() => setLabelModal(e)} className="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded text-slate-600 dark:text-slate-400" title="Generar etiqueta patrimonial">
-                    <QrCode size={15} />
-                  </button>
+                  <div className="inline-flex gap-0.5">
+                    <button onClick={() => setViewEquipo(e)} className="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded text-slate-600 dark:text-slate-400" title="Ver ficha"><Eye size={14} /></button>
+                    {e.categoria === "PC/Workstation" && (
+                      <>
+                        <button onClick={() => setWsModal(e)} className="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded text-slate-600 dark:text-slate-400" title="Ver estación de trabajo">
+                          <Monitor size={14} />
+                        </button>
+                        <button onClick={() => setActaModal(e)} className="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded text-slate-600 dark:text-slate-400" title="Emitir Acta de Cargo">
+                          <FileText size={14} />
+                        </button>
+                      </>
+                    )}
+                    <button onClick={() => setLabelModal(e)} className="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded text-slate-600 dark:text-slate-400" title="Generar etiqueta patrimonial">
+                      <QrCode size={14} />
+                    </button>
+                    <button onClick={async () => {
+                      const sb = createClient();
+                      const deBaja = estados.find((x) => x.nombre === "De Baja");
+                      if (deBaja) {
+                        await sb.from("equipos").update({ id_estado: deBaja.id_estado }).eq("id_equipo", e.id_equipo);
+                        setInventario((inv) => inv.map((x) => x.id_equipo === e.id_equipo ? { ...x, id_estado: deBaja.id_estado, estado: "De Baja" } : x));
+                      }
+                    }} className="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded text-amber-600 dark:text-amber-400" title="Dar de baja">
+                      <Ban size={14} />
+                    </button>
+                  </div>
                 </td>
               </tr>
             ))}
@@ -346,6 +377,31 @@ export function EquiposClient(props: {
               <button onClick={() => setLabelModal(null)} className="text-slate-400">✕</button>
             </div>
             <BarcodeLabel codigo={labelModal.codigo_patrimonial} codigoBarras={labelModal.codigo_barras} categoria={labelModal.categoria ?? ""} />
+          </div>
+        </div>
+      )}
+
+      {viewEquipo && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl w-full max-w-lg p-6 space-y-2">
+            <h2 className="font-bold text-lg text-slate-800 dark:text-slate-100">Ficha del Equipo</h2>
+            <div className="text-sm text-slate-600 dark:text-slate-300 space-y-1">
+              <div><span className="font-semibold">Código Patrimonial:</span> <span className="font-mono">{viewEquipo.codigo_patrimonial}</span></div>
+              <div><span className="font-semibold">Código Barras:</span> <span className="font-mono">{viewEquipo.codigo_barras}</span></div>
+              <div><span className="font-semibold">Serie:</span> <span className="font-mono">{viewEquipo.numero_serie ?? "—"}</span></div>
+              <div><span className="font-semibold">Categoría:</span> {viewEquipo.categoria}</div>
+              <div><span className="font-semibold">Marca/Modelo:</span> {viewEquipo.marca} {viewEquipo.modelo ?? ""}</div>
+              <div><span className="font-semibold">Color:</span> {viewEquipo.color}</div>
+              <div><span className="font-semibold">Estado:</span> {viewEquipo.estado}</div>
+              <div><span className="font-semibold">Área:</span> {viewEquipo.area_departamento}</div>
+              <div><span className="font-semibold">Padre:</span> {viewEquipo.equipo_padre_codigo_patrimonial ?? "—"}</div>
+              <div><span className="font-semibold">Valor:</span> S/ {Number(viewEquipo.valor_compra ?? 0).toLocaleString()}</div>
+              <div><span className="font-semibold">IP:</span> <span className="font-mono">{viewEquipo.direccion_ip ?? "—"}</span></div>
+              <div><span className="font-semibold">MAC:</span> <span className="font-mono">{viewEquipo.direccion_mac ?? "—"}</span></div>
+            </div>
+            <div className="flex justify-end">
+              <button onClick={() => setViewEquipo(null)} className="px-4 py-2 border border-slate-300 dark:border-slate-700 rounded-lg text-sm text-slate-700 dark:text-slate-300">Cerrar</button>
+            </div>
           </div>
         </div>
       )}
