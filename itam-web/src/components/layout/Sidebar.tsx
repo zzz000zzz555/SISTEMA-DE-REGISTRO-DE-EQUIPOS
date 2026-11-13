@@ -3,7 +3,7 @@
 // Use plain anchor tags to force full page loads (required for static export on GitHub Pages)
 import { usePathname } from "next/navigation";
 import {
-  LayoutDashboard, Monitor, Wrench, Boxes, ShieldCheck, Users, FileText, HardDrive, Keyboard, Printer, Speaker, Headphones,
+  LayoutDashboard, Monitor, Wrench, Boxes, ShieldCheck, Users, FileText, HardDrive, Keyboard, Printer, Speaker, Headphones, Activity,
 } from "lucide-react";
 import type { Usuario } from "@/lib/types";
 import { LogoutButton } from "./LogoutButton";
@@ -35,6 +35,7 @@ const groups = [
       { href: "/usuarios", label: "Usuarios y Sesiones", icon: Users, perm: null },
       { href: "/auditoria", label: "Auditoría Forense", icon: FileText, perm: null },
       { href: "/auditoria-sesiones", label: "Auditoría de Sesiones", icon: FileText, perm: "VER_AUDITORIA_SESIONES" },
+      { href: "/monitor", label: "Monitor de Actividad", icon: Activity, perm: "VER_AUDITORIA_SESIONES" },
     ],
   },
 ];
