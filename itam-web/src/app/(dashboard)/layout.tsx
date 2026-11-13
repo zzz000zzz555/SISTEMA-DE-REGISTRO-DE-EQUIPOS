@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import { Sidebar } from "@/components/layout/Sidebar";
 import { Topbar } from "@/components/layout/Topbar";
 import { CommandPalette } from "@/components/layout/CommandPalette";
@@ -10,16 +9,15 @@ import { getSession, type AuthSession } from "@/lib/auth-client";
 import type { Usuario } from "@/lib/types";
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
-  const router = useRouter();
   const [session, setSession] = useState<AuthSession | null>(null);
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
     const s = getSession();
-    if (!s) { router.replace("/login"); return; }
+    if (!s) { window.location.href = "/SISTEMA-DE-REGISTRO-DE-EQUIPOS/login/"; return; }
     setSession(s);
     setReady(true);
-  }, [router]);
+  }, []);
 
   if (!ready || !session) return <div className="flex h-screen items-center justify-center text-slate-400">Cargando...</div>;
 

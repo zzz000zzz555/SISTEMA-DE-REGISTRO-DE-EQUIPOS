@@ -1,50 +1,38 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { loginClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 import { ShieldCheck, User, Lock, Eye, EyeOff } from "lucide-react";
 import { BeruLogo } from "@/components/ui/BeruLogo";
+import { withBase } from "@/lib/utils";
 
 export default function LoginPage() {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const userRef = useRef<HTMLInputElement>(null);
+  const passRef = useRef<HTMLInputElement>(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPwd, setShowPwd] = useState(false);
-  const router = useRouter();
+  // const router = useRouter();
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    const username = userRef.current?.value ?? "";
+    const password = passRef.current?.value ?? "";
     setLoading(true);
     setError("");
     const res = await loginClient(username, password);
     setLoading(false);
-    if (res.ok) router.push("/dashboard");
+    if (res.ok) window.location.href = withBase("/dashboard/");
     else setError(res.message);
-  }
-
-  function fillDemo() {
-    setUsername("admin");
-    setPassword("Admin@123");
   }
 
   return (
     <div className="min-h-screen grid grid-cols-1 lg:grid-cols-2 bg-slate-950">
-      {/* Columna izquierda: branding */}
       <div className="hidden lg:flex flex-col justify-between bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 text-white p-12 relative overflow-hidden">
         <div className="absolute inset-0 opacity-10" style={{ backgroundImage: "linear-gradient(rgba(255,255,255,.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.05) 1px, transparent 1px)", backgroundSize: "40px 40px" }} />
         <div className="relative z-10">
-          <div className="flex items-center gap-3 mb-8">
-            <div className="w-12 h-12 rounded-xl bg-indigo-500/20 border border-indigo-400/30 flex items-center justify-center backdrop-blur">
-              <ShieldCheck size={24} className="text-indigo-300" />
-            </div>
-            <div>
-              <div className="font-bold text-lg tracking-wide">BERU ENTERPRISE</div>
-              <div className="text-xs text-indigo-300/70 uppercase tracking-widest">Control Patrimonial</div>
-            </div>
-          </div>
-          <div className="mb-6"><BeruLogo size="lg" /></div>
+          <div className="mb-8"><BeruLogo size="lg" /></div>
           <h1 className="text-4xl font-bold leading-tight mb-4">BERU Enterprise</h1>
           <p className="text-indigo-200/80 text-lg max-w-md">Sistema Empresarial de Registro de Equipos, Control Patrimonial y Seguridad RBAC.</p>
         </div>
@@ -57,7 +45,6 @@ export default function LoginPage() {
         </div>
       </div>
 
-      {/* Columna derecha: tarjeta de acceso */}
       <div className="flex items-center justify-center p-8 bg-slate-50">
         <div className="bg-white rounded-2xl shadow-xl border border-slate-200 p-8 w-full max-w-md">
           <div className="text-center mb-6">
@@ -73,9 +60,8 @@ export default function LoginPage() {
               <div className="relative">
                 <User size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
                 <input
+                  ref={userRef}
                   type="text"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
                   className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-indigo-600 focus:border-indigo-600 outline-none"
                   placeholder="admin"
                   required
@@ -87,11 +73,10 @@ export default function LoginPage() {
               <div className="relative">
                 <Lock size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
                 <input
+                  ref={passRef}
                   type={showPwd ? "text" : "password"}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
                   className="w-full pl-10 pr-12 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-indigo-600 focus:border-indigo-600 outline-none"
-                  placeholder="Admin@123"
+                  placeholder="••••••••"
                   required
                 />
                 <button type="button" onClick={() => setShowPwd(!showPwd)} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
@@ -111,7 +96,7 @@ export default function LoginPage() {
           <div className="mt-6 p-4 bg-slate-50 border border-slate-200 rounded-xl">
             <div className="text-xs text-slate-500 mb-1 font-semibold">Medidas de seguridad activas</div>
             <ul className="text-xs text-slate-500 space-y-1">
-              <li>• Contraseñas con mínimo 6 caracteres, letras, números y símbodo especial</li>
+              <li>• Contraseñas con mínimo 6 caracteres, letras, números y carácter especial</li>
               <li>• Bloqueo automático por 5 minutos tras 5 intentos fallidos</li>
               <li>• Sesión con token hasheado y registro forense de acceso</li>
               <li>• Validación de vigencia contractual del usuario</li>

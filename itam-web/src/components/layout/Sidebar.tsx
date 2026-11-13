@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+// Use plain anchor tags to force full page loads (required for static export on GitHub Pages)
 import { usePathname } from "next/navigation";
 import {
   LayoutDashboard, Monitor, Wrench, Boxes, ShieldCheck, Users, FileText, HardDrive, Keyboard, Printer, Speaker, Headphones,
@@ -8,6 +8,7 @@ import {
 import type { Usuario } from "@/lib/types";
 import { LogoutButton } from "./LogoutButton";
 import { BeruLogo } from "@/components/ui/BeruLogo";
+import { withBase } from "@/lib/utils";
 
 type Props = { user: Usuario; permissions: string[] };
 
@@ -54,16 +55,16 @@ export function Sidebar({ user, permissions }: Props) {
                 const Icon = item.icon;
                 const active = pathname === item.href || pathname.startsWith(item.href + "/");
                 return (
-                  <Link
+                  <a
                     key={item.href}
-                    href={item.href}
+                    href={withBase(item.href)}
                     className={`flex items-center gap-2.5 px-2.5 py-2 rounded-md text-sm transition ${
                       active ? "bg-indigo-600 text-white" : "text-slate-400 hover:bg-slate-800 hover:text-white"
                     }`}
                   >
                     <Icon size={16} strokeWidth={1.75} />
                     {item.label}
-                  </Link>
+                  </a>
                 );
               })}
             </div>

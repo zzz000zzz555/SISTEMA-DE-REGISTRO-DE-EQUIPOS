@@ -21,7 +21,7 @@ export function CommandPalette() {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [equipos, setEquipos] = useState<{ id_equipo: string; codigo_patrimonial: string; codigo_barras: string; numero_serie: string | null }[]>([]);
-  const router = useRouter();
+  // const router = useRouter();
 
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
@@ -72,7 +72,7 @@ export function CommandPalette() {
               {nav.filter((n) => n.label.toLowerCase().includes(query.toLowerCase())).map((n) => (
                 <Command.Item
                   key={n.href}
-                  onSelect={() => { router.push(n.href); setOpen(false); }}
+                  onSelect={() => { window.location.href = "/SISTEMA-DE-REGISTRO-DE-EQUIPOS" + n.href + "/"; }}
                   className="flex items-center gap-2 px-2 py-1.5 rounded cursor-pointer hover:bg-slate-100 text-sm"
                 >
                   <n.icon size={14} /> {n.label}
@@ -83,7 +83,7 @@ export function CommandPalette() {
               {filteredEquipos.map((e) => (
                 <Command.Item
                   key={e.id_equipo}
-                  onSelect={() => { router.push(`/equipos?eq=${e.id_equipo}`); setOpen(false); }}
+                  onSelect={() => { window.location.href = `/SISTEMA-DE-REGISTRO-DE-EQUIPOS/equipos/?eq=${e.id_equipo}`; }}
                   className="flex items-center gap-2 px-2 py-1.5 rounded cursor-pointer hover:bg-slate-100 text-sm font-mono"
                 >
                   <Monitor size={14} /> {e.codigo_patrimonial} <span className="text-slate-400 text-xs">{e.codigo_barras}</span>
