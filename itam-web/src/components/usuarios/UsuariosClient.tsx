@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Plus, Power } from "lucide-react";
+import { Plus, Power, Eye, Pencil, Trash2, Ban } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import type { Usuario, Rol, SesionToken } from "@/lib/types";
 
@@ -9,7 +9,8 @@ export function UsuariosClient({ usuarios: initial, roles, sesiones: initialSes 
   const [usuarios, setUsuarios] = useState(initial);
   const [sesiones, setSesiones] = useState(initialSes);
   const [modalOpen, setModalOpen] = useState(false);
-  const [form, setForm] = useState({ id_rol: 0, tipo_documento: "DNI", numero_documento: "", codigo_empleado: "", nombres: "", apellidos: "", correo_corporativo: "", telefono: "", username: "", password: "" });
+  const [viewUser, setViewUser] = useState<Usuario | null>(null);
+  const [form, setForm] = useState({ id_rol: 0, tipo_documento: "DNI", numero_documento: "", nombres: "", apellidos: "", correo_corporativo: "", telefono: "", username: "", password: "", password2: "" });
   const [msg, setMsg] = useState("");
 
   async function revocar(s: SesionToken) {
@@ -25,9 +26,25 @@ export function UsuariosClient({ usuarios: initial, roles, sesiones: initialSes 
     setUsuarios((us) => us.map((x) => x.id_usuario === u.id_usuario ? { ...x, estado_cuenta: nuevo as Usuario["estado_cuenta"] } : x));
   }
 
+  async function anular(u: Usuario) {
+    const admin = createClient();
+    await admin.from("usuarios").update({ estado_cuenta: "CESADO", fecha_finalizacion: new Date().toISOString() }).eq("id_usuario", u.id_usuario);
+    setUsuarios((us) => us.map((x) => x.id_usuario === u.id_usuario ? { ...x, estado_cuenta: "CESADO", fecha_finalizacion: new Date().toISOString() } : x));
+  }
+
+  async function eliminar(u: Usuario) {
+    if (!confirm("¿Eliminar permanentemente este usuario? (soft-delete recomendado)")) return;
+    const admin = createClient();
+    await admin.from("usuarios").update({ estado_cuenta: "CESADO", fecha_finalizacion: new Date().toISOString() }).eq("id_usuario", u.id_usuario);
+    setUsuarios((us) => us.filter((x) => x.id_usuario !== u.id_usuario));
+  }
+
   async function saveUser() {
     setMsg("");
+    if (form.password !== form.password2) { setMsg("Las contraseñas no coinciden"); return; }
+    if (form.password.length < 6) { setMsg("La contraseña debe tener al menos 6 caracteres"); return; }
     const sb = createClient();
+    const codigoEmpleado = "EMP-" + Date.now().toString().slice(-6);
     const { data, error } = await sb.rpc("fn_crear_usuario", {
       p_id_rol: form.id_rol,
       p_tipo_documento: form.tipo_documento,
@@ -37,7 +54,7 @@ export function UsuariosClient({ usuarios: initial, roles, sesiones: initialSes 
       p_correo_corporativo: form.correo_corporativo,
       p_username: form.username,
       p_password: form.password,
-      p_codigo_empleado: form.codigo_empleado || null,
+      p_codigo_empleado: codigoEmpleado,
       p_telefono: form.telefono || null,
     });
     const res = data as { ok: boolean; mensaje: string; id_usuario?: string };
@@ -46,11 +63,10 @@ export function UsuariosClient({ usuarios: initial, roles, sesiones: initialSes 
       return;
     }
     setMsg(res.mensaje);
-    // refresh list
     const { data: fresh } = await sb.from("usuarios").select("*").order("id_usuario");
     if (fresh) setUsuarios(fresh as Usuario[]);
     setModalOpen(false);
-    setForm({ id_rol: 0, tipo_documento: "DNI", numero_documento: "", codigo_empleado: "", nombres: "", apellidos: "", correo_corporativo: "", telefono: "", username: "", password: "" });
+    setForm({ id_rol: 0, tipo_documento: "DNI", numero_documento: "", nombres: "", apellidos: "", correo_corporativo: "", telefono: "", username: "", password: "", password2: "" });
   }
 
   return (
@@ -90,7 +106,12 @@ export function UsuariosClient({ usuarios: initial, roles, sesiones: initialSes 
                 </td>
                 <td className="px-4 py-3 text-slate-500 dark:text-slate-400">{u.ultimo_acceso ? new Date(u.ultimo_acceso).toLocaleString() : "—"}</td>
                 <td className="px-4 py-3 text-right">
-                  <button onClick={() => toggleEstado(u)} className="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded text-slate-600 dark:text-slate-300" title="Activar/Suspender"><Power size={15} /></button>
+                  <div className="inline-flex gap-1">
+                    <button onClick={() => setViewUser(u)} className="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded text-slate-600 dark:text-slate-300" title="Ver"><Eye size={15} /></button>
+                    <button onClick={() => toggleEstado(u)} className="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded text-slate-600 dark:text-slate-300" title="Activar/Suspender"><Power size={15} /></button>
+                    <button onClick={() => anular(u)} className="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded text-amber-600 dark:text-amber-400" title="Anular"><Ban size={15} /></button>
+                    <button onClick={() => eliminar(u)} className="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded text-red-600 dark:text-red-400" title="Eliminar"><Trash2 size={15} /></button>
+                  </div>
                 </td>
               </tr>
             ))}
@@ -150,7 +171,6 @@ export function UsuariosClient({ usuarios: initial, roles, sesiones: initialSes 
               </select>
               <input placeholder="N° Documento" value={form.numero_documento} onChange={(e) => setForm({ ...form, numero_documento: e.target.value })} className="border border-slate-300 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 rounded-lg px-3 py-2 text-sm" />
             </div>
-            <input placeholder="Código empleado (opcional)" value={form.codigo_empleado} onChange={(e) => setForm({ ...form, codigo_empleado: e.target.value })} className="w-full border border-slate-300 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 rounded-lg px-3 py-2 text-sm" />
             <div className="grid grid-cols-2 gap-2">
               <input placeholder="Nombres" value={form.nombres} onChange={(e) => setForm({ ...form, nombres: e.target.value })} className="border border-slate-300 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 rounded-lg px-3 py-2 text-sm" />
               <input placeholder="Apellidos" value={form.apellidos} onChange={(e) => setForm({ ...form, apellidos: e.target.value })} className="border border-slate-300 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 rounded-lg px-3 py-2 text-sm" />
@@ -158,10 +178,32 @@ export function UsuariosClient({ usuarios: initial, roles, sesiones: initialSes 
             <input placeholder="Correo corporativo" value={form.correo_corporativo} onChange={(e) => setForm({ ...form, correo_corporativo: e.target.value })} className="w-full border border-slate-300 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 rounded-lg px-3 py-2 text-sm" />
             <input placeholder="Teléfono (opcional)" value={form.telefono} onChange={(e) => setForm({ ...form, telefono: e.target.value })} className="w-full border border-slate-300 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 rounded-lg px-3 py-2 text-sm" />
             <input placeholder="Username" value={form.username} onChange={(e) => setForm({ ...form, username: e.target.value })} className="w-full border border-slate-300 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 rounded-lg px-3 py-2 text-sm" />
-            <input type="password" placeholder="Contraseña (min 6, letras+números+especial)" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} className="w-full border border-slate-300 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 rounded-lg px-3 py-2 text-sm" />
+            <input type="password" placeholder="Contraseña" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} className="w-full border border-slate-300 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 rounded-lg px-3 py-2 text-sm" />
+            <input type="password" placeholder="Confirmar contraseña" value={form.password2} onChange={(e) => setForm({ ...form, password2: e.target.value })} className="w-full border border-slate-300 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 rounded-lg px-3 py-2 text-sm" />
+            <div className="text-xs text-slate-500 dark:text-slate-400">El código de empleado se genera automáticamente.</div>
+            {msg && <div className="text-sm text-red-600 dark:text-red-400">{msg}</div>}
             <div className="flex gap-2 justify-end">
               <button onClick={() => setModalOpen(false)} className="px-4 py-2 border border-slate-300 dark:border-slate-700 rounded-lg text-sm text-slate-700 dark:text-slate-300">Cancelar</button>
               <button onClick={saveUser} className="bg-emerald-600 text-white px-4 py-2 rounded-lg text-sm">Guardar</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {viewUser && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl w-full max-w-md p-6 space-y-2">
+            <h2 className="font-bold text-lg text-slate-800 dark:text-slate-100">Detalle de Usuario</h2>
+            <div className="text-sm text-slate-600 dark:text-slate-300 space-y-1">
+              <div><span className="font-semibold">Username:</span> {viewUser.username}</div>
+              <div><span className="font-semibold">Nombre:</span> {viewUser.nombres} {viewUser.apellidos}</div>
+              <div><span className="font-semibold">Correo:</span> {viewUser.correo_corporativo}</div>
+              <div><span className="font-semibold">Rol:</span> {roles.find((r) => r.id_rol === viewUser.id_rol)?.nombre_rol}</div>
+              <div><span className="font-semibold">Estado:</span> {viewUser.estado_cuenta}</div>
+              <div><span className="font-semibold">Documento:</span> {viewUser.tipo_documento} {viewUser.numero_documento}</div>
+            </div>
+            <div className="flex justify-end">
+              <button onClick={() => setViewUser(null)} className="px-4 py-2 border border-slate-300 dark:border-slate-700 rounded-lg text-sm text-slate-700 dark:text-slate-300">Cerrar</button>
             </div>
           </div>
         </div>
