@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Plus, Power, Eye, Pencil, Trash2, Ban } from "lucide-react";
+import { Plus, Power, Eye, Pencil, Trash2, Ban, Activity, LogOut } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import type { Usuario, Rol, SesionToken } from "@/lib/types";
 
@@ -10,6 +10,8 @@ export function UsuariosClient({ usuarios: initial, roles, sesiones: initialSes 
   const [sesiones, setSesiones] = useState(initialSes);
   const [modalOpen, setModalOpen] = useState(false);
   const [viewUser, setViewUser] = useState<Usuario | null>(null);
+  const [editUser, setEditUser] = useState<Usuario | null>(null);
+  const [editForm, setEditForm] = useState({ id_rol: 0, nombres: "", apellidos: "", correo_corporativo: "", telefono: "", estado_cuenta: "ACTIVO" as Usuario["estado_cuenta"] });
   const [form, setForm] = useState({ id_rol: 0, tipo_documento: "DNI", numero_documento: "", nombres: "", apellidos: "", correo_corporativo: "", telefono: "", username: "", password: "", password2: "" });
   const [msg, setMsg] = useState("");
 
@@ -37,6 +39,33 @@ export function UsuariosClient({ usuarios: initial, roles, sesiones: initialSes 
     const admin = createClient();
     await admin.from("usuarios").update({ estado_cuenta: "CESADO", fecha_finalizacion: new Date().toISOString() }).eq("id_usuario", u.id_usuario);
     setUsuarios((us) => us.filter((x) => x.id_usuario !== u.id_usuario));
+  }
+
+  function openEdit(u: Usuario) {
+    setEditUser(u);
+    setEditForm({ id_rol: u.id_rol, nombres: u.nombres, apellidos: u.apellidos, correo_corporativo: u.correo_corporativo, telefono: u.telefono ?? "", estado_cuenta: u.estado_cuenta });
+  }
+
+  async function saveEdit() {
+    if (!editUser) return;
+    const sb = createClient();
+    await sb.from("usuarios").update({
+      id_rol: editForm.id_rol,
+      nombres: editForm.nombres,
+      apellidos: editForm.apellidos,
+      correo_corporativo: editForm.correo_corporativo,
+      telefono: editForm.telefono || null,
+      estado_cuenta: editForm.estado_cuenta,
+      fecha_finalizacion: editForm.estado_cuenta === "CESADO" ? new Date().toISOString() : null,
+    }).eq("id_usuario", editUser.id_usuario);
+    setUsuarios((us) => us.map((x) => x.id_usuario === editUser.id_usuario ? { ...x, ...editForm } : x));
+    setEditUser(null);
+  }
+
+  async function killUserSessions(u: Usuario) {
+    const sb = createClient();
+    await sb.from("sesiones_tokens").update({ estado_sesion: "REVOCADA_ADMIN", fecha_finalizacion: new Date().toISOString(), motivo_cierre: "Sesiones cerradas por administrador" }).eq("id_usuario", u.id_usuario).eq("estado_sesion", "ACTIVA");
+    setSesiones((ss) => ss.map((x) => x.id_usuario === u.id_usuario && x.estado_sesion === "ACTIVA" ? { ...x, estado_sesion: "REVOCADA_ADMIN" } : x));
   }
 
   async function saveUser() {
@@ -107,8 +136,10 @@ export function UsuariosClient({ usuarios: initial, roles, sesiones: initialSes 
                 <td className="px-4 py-3 text-slate-500 dark:text-slate-400">{u.ultimo_acceso ? new Date(u.ultimo_acceso).toLocaleString() : "—"}</td>
                 <td className="px-4 py-3 text-right">
                   <div className="inline-flex gap-1">
-                    <button onClick={() => setViewUser(u)} className="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded text-slate-600 dark:text-slate-300" title="Ver"><Eye size={15} /></button>
+                    <button onClick={() => setViewUser(u)} className="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded text-slate-600 dark:text-slate-300" title="Ver detalle"><Eye size={15} /></button>
+                    <button onClick={() => openEdit(u)} className="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded text-indigo-600 dark:text-indigo-400" title="Editar"><Pencil size={15} /></button>
                     <button onClick={() => toggleEstado(u)} className="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded text-slate-600 dark:text-slate-300" title="Activar/Suspender"><Power size={15} /></button>
+                    <button onClick={() => killUserSessions(u)} className="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded text-orange-600 dark:text-orange-400" title="Cerrar sesiones"><LogOut size={15} /></button>
                     <button onClick={() => anular(u)} className="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded text-amber-600 dark:text-amber-400" title="Anular"><Ban size={15} /></button>
                     <button onClick={() => eliminar(u)} className="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded text-red-600 dark:text-red-400" title="Eliminar"><Trash2 size={15} /></button>
                   </div>
@@ -185,6 +216,30 @@ export function UsuariosClient({ usuarios: initial, roles, sesiones: initialSes 
             <div className="flex gap-2 justify-end">
               <button onClick={() => setModalOpen(false)} className="px-4 py-2 border border-slate-300 dark:border-slate-700 rounded-lg text-sm text-slate-700 dark:text-slate-300">Cancelar</button>
               <button onClick={saveUser} className="bg-emerald-600 text-white px-4 py-2 rounded-lg text-sm">Guardar</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {editUser && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl w-full max-w-lg p-6 space-y-3">
+            <h2 className="font-bold text-lg text-slate-800 dark:text-slate-100">Editar Usuario</h2>
+            <select value={editForm.id_rol} onChange={(e) => setEditForm({ ...editForm, id_rol: Number(e.target.value) })} className="w-full border border-slate-300 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 rounded-lg px-3 py-2 text-sm">
+              {roles.map((r) => <option key={r.id_rol} value={r.id_rol}>{r.nombre_rol}</option>)}
+            </select>
+            <div className="grid grid-cols-2 gap-2">
+              <input placeholder="Nombres" value={editForm.nombres} onChange={(e) => setEditForm({ ...editForm, nombres: e.target.value })} className="border border-slate-300 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 rounded-lg px-3 py-2 text-sm" />
+              <input placeholder="Apellidos" value={editForm.apellidos} onChange={(e) => setEditForm({ ...editForm, apellidos: e.target.value })} className="border border-slate-300 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 rounded-lg px-3 py-2 text-sm" />
+            </div>
+            <input placeholder="Correo corporativo" value={editForm.correo_corporativo} onChange={(e) => setEditForm({ ...editForm, correo_corporativo: e.target.value })} className="w-full border border-slate-300 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 rounded-lg px-3 py-2 text-sm" />
+            <input placeholder="Teléfono" value={editForm.telefono} onChange={(e) => setEditForm({ ...editForm, telefono: e.target.value })} className="w-full border border-slate-300 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 rounded-lg px-3 py-2 text-sm" />
+            <select value={editForm.estado_cuenta} onChange={(e) => setEditForm({ ...editForm, estado_cuenta: e.target.value as Usuario["estado_cuenta"] })} className="w-full border border-slate-300 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 rounded-lg px-3 py-2 text-sm">
+              {["ACTIVO","SUSPENDIDO","CESADO","BLOQUEADO"].map((s) => <option key={s}>{s}</option>)}
+            </select>
+            <div className="flex gap-2 justify-end">
+              <button onClick={() => setEditUser(null)} className="px-4 py-2 border border-slate-300 dark:border-slate-700 rounded-lg text-sm text-slate-700 dark:text-slate-300">Cancelar</button>
+              <button onClick={saveEdit} className="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm">Guardar Cambios</button>
             </div>
           </div>
         </div>
