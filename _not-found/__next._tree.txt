@@ -1,5 +1,5 @@
-:HL["/SISTEMA-DE-REGISTRO-DE-EQUIPOS/_next/static/chunks/0af776aobaaem.css","style"]
+:HL["/SISTEMA-DE-REGISTRO-DE-EQUIPOS/_next/static/chunks/1oo8pvvtr4l0-.css","style"]
 :HL["https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap","style"]
 2:[["children",{"s":"__PAGE__","h":160}]]
 1:[["children",{"s":"/_not-found","h":96,"c":"$Q2"}]]
-0:{"b":"ZVBH0HEkwJ_c3anJyCcAA","t":{"t":{"s":"","h":80,"c":"$Q1"}}}
+0:{"b":"4WOV_fuMbCIfwFVUZjgY7","t":{"t":{"s":"","h":80,"c":"$Q1"}}}
