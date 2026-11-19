@@ -169,6 +169,7 @@ export function EquiposClient(props: {
             { header: "Modelo", key: "modelo", width: 16 },
             { header: "Estado", key: "estado", width: 14 },
             { header: "Área", key: "area_departamento", width: 16 },
+            { header: "Usuario Asignado", key: "usuario_asignado", width: 18 },
             { header: "Padre", key: "equipo_padre_codigo_patrimonial", width: 14 },
             { header: "Valor Compra", key: "valor_compra", width: 12, currency: true },
             { header: "IP", key: "direccion_ip", width: 14 },
@@ -225,6 +226,7 @@ export function EquiposClient(props: {
               <th className="text-left px-3 py-3">Marca / Modelo</th>
               <th className="text-left px-3 py-3">Estado</th>
               <th className="text-left px-3 py-3">Área</th>
+              <th className="text-left px-3 py-3">Usuario Asignado</th>
               <th className="text-left px-3 py-3">Padre</th>
               <th className="text-left px-3 py-3">Valor</th>
               <th className="text-right px-3 py-3">Acciones</th>
@@ -255,6 +257,7 @@ export function EquiposClient(props: {
                   </span>
                 </td>
                 <td className="px-3 py-2">{e.area_departamento}</td>
+                <td className="px-3 py-2 text-xs text-slate-600 dark:text-slate-400">{e.usuario_asignado ?? "—"}</td>
                 <td className="px-3 py-2 text-xs">{e.equipo_padre_codigo_patrimonial ?? "—"}</td>
                 <td className="px-3 py-2">S/ {Number(e.valor_compra ?? 0).toLocaleString()}</td>
                 <td className="px-3 py-2 text-right">

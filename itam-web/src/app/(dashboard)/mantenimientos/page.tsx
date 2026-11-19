@@ -11,7 +11,8 @@ export default function MantenimientosPage() {
     Promise.all([
       sb.from("mantenimientos").select("*").order("fecha_registro", { ascending: false }),
       sb.from("equipos").select("id_equipo, codigo_patrimonial").order("codigo_patrimonial"),
-    ]).then(([m, e]) => setProps({ mantenimientos: m.data ?? [], equipos: e.data ?? [] }));
+      sb.from("usuarios").select("id_usuario, username, nombres, apellidos").order("username"),
+    ]).then(([m, e, u]) => setProps({ mantenimientos: m.data ?? [], equipos: e.data ?? [], usuarios: u.data ?? [] }));
   }, []);
   if (!props) return <div className="text-slate-400">Cargando...</div>;
   return <MantenimientosClient {...props} />;

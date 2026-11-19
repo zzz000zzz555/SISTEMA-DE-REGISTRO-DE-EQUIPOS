@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Plus, Eye, Pencil, Ban, Trash2 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 
-export function MantenimientosClient({ mantenimientos: initial, equipos }: { mantenimientos: any[]; equipos: { id_equipo: string; codigo_patrimonial: string }[] }) {
+export function MantenimientosClient({ mantenimientos: initial, equipos, usuarios }: { mantenimientos: any[]; equipos: { id_equipo: string; codigo_patrimonial: string }[]; usuarios: { id_usuario: string; username: string; nombres: string; apellidos: string }[] }) {
   const [items, setItems] = useState(initial);
   const [open, setOpen] = useState(false);
   const [viewItem, setViewItem] = useState<any | null>(null);
@@ -70,6 +70,7 @@ export function MantenimientosClient({ mantenimientos: initial, equipos }: { man
           <thead className="bg-slate-50 dark:bg-slate-800/50 text-slate-500 dark:text-slate-400">
             <tr>
               <th className="text-left px-3 py-2.5">Equipo</th>
+              <th className="text-left px-3 py-2.5">Técnico</th>
               <th className="text-left px-3 py-2.5">Tipo</th>
               <th className="text-left px-3 py-2.5">Falla</th>
               <th className="text-left px-3 py-2.5">Costo</th>
@@ -82,6 +83,7 @@ export function MantenimientosClient({ mantenimientos: initial, equipos }: { man
             {items.map((m) => (
               <tr key={m.id_mantenimiento} className="border-t border-slate-100 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800/50">
                 <td className="px-3 py-2 font-mono text-xs text-slate-700 dark:text-slate-300">{equipos.find((e) => e.id_equipo === m.id_equipo)?.codigo_patrimonial ?? m.id_equipo}</td>
+                <td className="px-3 py-2 text-slate-600 dark:text-slate-400">{usuarios.find((u) => u.id_usuario === m.id_tecnico_responsable)?.username ?? "—"}</td>
                 <td className="px-3 py-2 text-slate-600 dark:text-slate-400">{m.tipo_mantenimiento}</td>
                 <td className="px-3 py-2 text-slate-600 dark:text-slate-400 truncate max-w-xs">{m.descripcion_falla}</td>
                 <td className="px-3 py-2 text-slate-700 dark:text-slate-300">S/ {Number(m.costo).toLocaleString()}</td>
@@ -102,7 +104,7 @@ export function MantenimientosClient({ mantenimientos: initial, equipos }: { man
                 </td>
               </tr>
             ))}
-            {items.length === 0 && <tr><td colSpan={7} className="text-center py-8 text-slate-400">Sin mantenimientos registrados</td></tr>}
+            {items.length === 0 && <tr><td colSpan={8} className="text-center py-8 text-slate-400">Sin mantenimientos registrados</td></tr>}
           </tbody>
         </table>
       </div>
