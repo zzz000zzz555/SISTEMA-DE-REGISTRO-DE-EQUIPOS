@@ -1,9 +1,8 @@
 "use client";
 
-// Use plain anchor tags to force full page loads (required for static export on GitHub Pages)
 import { usePathname } from "next/navigation";
 import {
-  LayoutDashboard, Monitor, Wrench, Boxes, ShieldCheck, Users, FileText, HardDrive, Keyboard, Printer, Speaker, Headphones, Activity,
+  LayoutDashboard, Monitor, Wrench, Boxes, ShieldCheck, Users, FileText, Activity,
 } from "lucide-react";
 import type { Usuario } from "@/lib/types";
 import { LogoutButton } from "./LogoutButton";
@@ -14,10 +13,10 @@ type Props = { user: Usuario; permissions: string[] };
 
 const groups = [
   {
-    label: "Operaciones BERU",
+    label: "Operaciones",
     items: [
       { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard, perm: null },
-      { href: "/equipos", label: "Equipos Patrimoniales", icon: Monitor, perm: "EQUIPOS_VER" },
+      { href: "/equipos", label: "Equipos", icon: Monitor, perm: "EQUIPOS_VER" },
       { href: "/mantenimientos", label: "Mantenimientos", icon: Wrench, perm: null },
     ],
   },
@@ -28,14 +27,14 @@ const groups = [
     ],
   },
   {
-    label: "Administración y Seguridad",
+    label: "Administración",
     items: [
       { href: "/roles", label: "Roles y Permisos", icon: ShieldCheck, perm: null },
-      { href: "/modulos", label: "Gestión de Módulos", icon: Boxes, perm: null },
-      { href: "/usuarios", label: "Usuarios y Sesiones", icon: Users, perm: null },
-      { href: "/auditoria", label: "Auditoría Forense", icon: FileText, perm: null },
-      { href: "/auditoria-sesiones", label: "Auditoría de Sesiones", icon: FileText, perm: "VER_AUDITORIA_SESIONES" },
-      { href: "/monitor", label: "Monitor de Actividad", icon: Activity, perm: "VER_AUDITORIA_SESIONES" },
+      { href: "/modulos", label: "Módulos", icon: Boxes, perm: null },
+      { href: "/usuarios", label: "Usuarios", icon: Users, perm: null },
+      { href: "/auditoria", label: "Auditoría", icon: FileText, perm: null },
+      { href: "/auditoria-sesiones", label: "Sesiones", icon: FileText, perm: "VER_AUDITORIA_SESIONES" },
+      { href: "/monitor", label: "Monitor", icon: Activity, perm: "VER_AUDITORIA_SESIONES" },
     ],
   },
 ];
@@ -43,14 +42,14 @@ const groups = [
 export function Sidebar({ user, permissions }: Props) {
   const pathname = usePathname();
   return (
-    <aside className="w-64 bg-white text-slate-700 dark:bg-slate-950 dark:text-slate-300 flex flex-col min-h-screen border-r border-slate-200 dark:border-slate-800">
-      <div className="h-16 px-4 flex items-center gap-2 border-b border-slate-200 dark:border-slate-800">
+    <aside className="w-60 bg-slate-950 text-slate-300 flex flex-col min-h-screen border-r border-slate-800">
+      <div className="h-14 px-4 flex items-center gap-2 border-b border-slate-800">
         <BeruLogo size="sm" />
       </div>
       <nav className="flex-1 p-3 space-y-4 overflow-y-auto">
         {groups.map((g) => (
           <div key={g.label}>
-            <div className="px-2 mb-1 text-[10px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">{g.label}</div>
+            <div className="px-2 mb-1.5 text-[10px] font-semibold uppercase tracking-wider text-slate-500">{g.label}</div>
             <div className="space-y-0.5">
               {g.items.map((item) => {
                 if (item.perm && !permissions.includes(item.perm) && user.id_rol !== 1) return null;
@@ -60,8 +59,8 @@ export function Sidebar({ user, permissions }: Props) {
                   <a
                     key={item.href}
                     href={withBase(item.href)}
-                    className={`flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-sm transition-colors duration-150 ${
-                      active ? "bg-indigo-50 text-indigo-700 dark:bg-indigo-500/15 dark:text-indigo-300" : "text-slate-600 hover:bg-slate-100 hover:text-slate-950 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-white"
+                    className={`flex items-center gap-2.5 px-2.5 py-2 rounded-md text-sm transition-colors duration-150 ${
+                      active ? "bg-indigo-600 text-white shadow-sm" : "text-slate-400 hover:bg-slate-800/60 hover:text-white"
                     }`}
                   >
                     <Icon size={16} strokeWidth={1.75} />
@@ -73,17 +72,16 @@ export function Sidebar({ user, permissions }: Props) {
           </div>
         ))}
       </nav>
-      <div className="p-3 border-t border-slate-200 dark:border-slate-800 flex items-center gap-2">
+      <div className="p-3 border-t border-slate-800 flex items-center gap-2">
         <div className="w-8 h-8 rounded-full bg-indigo-600 text-white flex items-center justify-center text-xs font-bold">
           {user.nombres[0]}{user.apellidos[0]}
         </div>
         <div className="flex-1 min-w-0">
-          <div className="text-xs font-medium text-slate-900 dark:text-slate-100 truncate">{user.nombres} {user.apellidos}</div>
-          <div className="text-[10px] text-slate-500 dark:text-slate-400 truncate">{user.correo_corporativo}</div>
+          <div className="text-xs font-medium text-white truncate">{user.nombres} {user.apellidos}</div>
+          <div className="text-[10px] text-slate-500 truncate">{user.correo_corporativo}</div>
         </div>
         <LogoutButton />
       </div>
     </aside>
   );
 }
-
