@@ -211,7 +211,7 @@ export function EquiposClient(props: {
 
       <div className="bg-white dark:bg-slate-900 rounded-xl border shadow-sm overflow-x-auto">
         <table className="w-full text-sm">
-          <thead className="bg-slate-50 dark:bg-slate-950 text-slate-600 dark:text-slate-400">
+          <thead className="bg-slate-50/80 dark:bg-slate-800/50 text-slate-500 dark:text-slate-400 sticky top-0">
             <tr>
               <th className="px-3 py-3 w-8">
                 <input type="checkbox" checked={filtered.length > 0 && selected.size === filtered.length} onChange={(e) => {
@@ -245,10 +245,14 @@ export function EquiposClient(props: {
                 <td className="px-3 py-2">{e.categoria}</td>
                 <td className="px-3 py-2">{e.marca} {e.modelo ?? ""}</td>
                 <td className="px-3 py-2">
-                  <span className={`px-2 py-0.5 rounded text-xs font-medium ${
-                    e.estado === "Operativo" || e.estado === "Nuevo" ? "bg-emerald-100 text-emerald-700" :
-                    e.estado === "En Mantenimiento" ? "bg-amber-100 text-amber-700" : "bg-red-100 text-red-700"
-                  }`}>{e.estado}</span>
+                  <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-xs font-medium border ${
+                    e.estado === "Operativo" || e.estado === "Nuevo" ? "bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-900/30 dark:text-emerald-300 dark:border-emerald-800" :
+                    e.estado === "En Mantenimiento" ? "bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-900/30 dark:text-amber-300 dark:border-amber-800" :
+                    "bg-red-50 text-red-700 border-red-200 dark:bg-red-900/30 dark:text-red-300 dark:border-red-800"
+                  }`}>
+                    <span className="w-1.5 h-1.5 rounded-full bg-current" />
+                    {e.estado}
+                  </span>
                 </td>
                 <td className="px-3 py-2">{e.area_departamento}</td>
                 <td className="px-3 py-2 text-xs">{e.equipo_padre_codigo_patrimonial ?? "—"}</td>
