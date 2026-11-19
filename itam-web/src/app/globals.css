@@ -129,3 +129,7 @@ body { font-family: var(--font-inter), system-ui, sans-serif; }
 
 /* --- Transition smooth for theme --- */
 * { transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease; }
+
+/* Logo sin fondo (blend mode para eliminar fondo blanco/negro) */
+.logo-no-bg { mix-blend-mode: multiply; }
+.dark .logo-no-bg { mix-blend-mode: screen; }
