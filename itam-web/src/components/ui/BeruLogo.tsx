@@ -6,7 +6,7 @@ export function BeruLogo({ size = "md", inverse = false }: { size?: "sm" | "md" 
   return (
     <div className="flex items-center gap-2.5">
       <div className={`${dims} relative flex items-center justify-center`}>
-        <img src="/beru-logo.png" alt="BERU" className="w-full h-full object-contain" />
+        <img src="/SISTEMA-DE-REGISTRO-DE-EQUIPOS/beru-logo.png" alt="BERU" className="w-full h-full object-contain" />
       </div>
       <div className="flex items-baseline gap-1.5">
         <span className={`${text} font-extrabold tracking-tight ${inverse ? "text-white" : "text-slate-900 dark:text-slate-100"}`}>BERU</span>
