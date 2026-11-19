@@ -14,3 +14,4 @@ export default function AuditoriaPage() {
   if (!rows) return <div className="text-slate-400">Cargando...</div>;
   return <AuditoriaClient rows={rows} />;
 }
+

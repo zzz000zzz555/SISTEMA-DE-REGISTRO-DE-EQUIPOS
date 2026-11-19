@@ -23,3 +23,4 @@ export default function CatalogosPage() {
   if (!props) return <div className="text-slate-400">Cargando...</div>;
   return <CatalogosClient {...props} />;
 }
+

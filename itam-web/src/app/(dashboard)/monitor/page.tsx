@@ -40,7 +40,7 @@ export default function MonitorPage() {
           </h1>
           <span className="text-xs text-slate-500 dark:text-slate-400">Actualización cada 10s</span>
         </div>
-        <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-x-auto">
+        <div className="glass-card rounded-xl overflow-x-auto">
           <table className="w-full text-sm">
             <thead className="bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
               <tr>

@@ -20,3 +20,4 @@ export default function RolesPage() {
   if (!props) return <div className="text-slate-400">Cargando...</div>;
   return <RolesClient {...props} />;
 }
+

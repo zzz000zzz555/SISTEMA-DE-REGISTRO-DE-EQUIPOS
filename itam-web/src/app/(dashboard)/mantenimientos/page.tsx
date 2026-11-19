@@ -16,3 +16,4 @@ export default function MantenimientosPage() {
   if (!props) return <div className="text-slate-400">Cargando...</div>;
   return <MantenimientosClient {...props} />;
 }
+

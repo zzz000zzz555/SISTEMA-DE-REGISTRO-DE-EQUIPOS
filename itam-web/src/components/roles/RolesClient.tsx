@@ -116,7 +116,7 @@ export function RolesClient({
         </button>
       </div>
 
-      <div className="bg-white dark:bg-slate-900 rounded-xl border shadow-sm">
+      <div className="glass-card rounded-xl">
         <div className="p-4 flex flex-wrap items-center gap-3 border-b">
           <div className="flex items-center gap-2 border rounded-lg px-3 py-1.5 flex-1 max-w-md">
             <Search size={16} className="text-slate-400" />
@@ -224,4 +224,5 @@ export function RolesClient({
     </div>
   );
 }
+
 

@@ -69,7 +69,7 @@ export function CatalogosClient(props: {
       </div>
 
       {tab === "categorias" && (
-        <div className="bg-white dark:bg-slate-900 rounded-xl border shadow-sm p-4 space-y-3">
+        <div className="glass-card rounded-xl p-4 space-y-3">
           <div className="flex gap-2">
             <input placeholder="Nombre categoría" value={newCat.nombre} onChange={(e) => setNewCat({ ...newCat, nombre: e.target.value })} className="border rounded-lg px-3 py-2 text-sm flex-1" />
             <input placeholder="Prefijo (MON)" value={newCat.prefijo} onChange={(e) => setNewCat({ ...newCat, prefijo: e.target.value })} className="border rounded-lg px-3 py-2 text-sm w-28" />
@@ -87,7 +87,7 @@ export function CatalogosClient(props: {
       )}
 
       {tab === "marcas" && (
-        <div className="bg-white dark:bg-slate-900 rounded-xl border shadow-sm p-4 space-y-3">
+        <div className="glass-card rounded-xl p-4 space-y-3">
           <div className="flex gap-2">
             <input placeholder="Nombre marca" value={newMarca} onChange={(e) => setNewMarca(e.target.value)} className="border rounded-lg px-3 py-2 text-sm flex-1" />
             <button onClick={addMarca} className="bg-emerald-600 text-white px-4 py-2 rounded-lg text-sm flex items-center gap-1"><Plus size={14} /> Agregar</button>
@@ -101,7 +101,7 @@ export function CatalogosClient(props: {
       )}
 
       {tab === "colores" && (
-        <div className="bg-white dark:bg-slate-900 rounded-xl border shadow-sm p-4 space-y-3">
+        <div className="glass-card rounded-xl p-4 space-y-3">
           <div className="flex gap-2">
             <input placeholder="Nombre color" value={newColor.nombre} onChange={(e) => setNewColor({ ...newColor, nombre: e.target.value })} className="border rounded-lg px-3 py-2 text-sm flex-1" />
             <input type="color" value={newColor.hex} onChange={(e) => setNewColor({ ...newColor, hex: e.target.value })} className="border rounded-lg w-12 h-10" />
@@ -120,7 +120,7 @@ export function CatalogosClient(props: {
       )}
 
       {tab === "ubicaciones" && (
-        <div className="bg-white dark:bg-slate-900 rounded-xl border shadow-sm p-4 space-y-3">
+        <div className="glass-card rounded-xl p-4 space-y-3">
           <div className="flex gap-2">
             <input placeholder="Sede" value={newUbi.sede} onChange={(e) => setNewUbi({ ...newUbi, sede: e.target.value })} className="border rounded-lg px-3 py-2 text-sm flex-1" />
             <input placeholder="Área/Departamento" value={newUbi.area} onChange={(e) => setNewUbi({ ...newUbi, area: e.target.value })} className="border rounded-lg px-3 py-2 text-sm flex-1" />
@@ -140,4 +140,5 @@ export function CatalogosClient(props: {
     </div>
   );
 }
+
 

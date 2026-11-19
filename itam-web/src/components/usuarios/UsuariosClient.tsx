@@ -109,7 +109,7 @@ export function UsuariosClient({ usuarios: initial, roles, sesiones: initialSes 
 
       {msg && <div className="text-sm bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 p-2 rounded">{msg}</div>}
 
-      <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+      <div className="glass-card rounded-xl overflow-hidden">
         <div className="p-4 border-b border-slate-200 dark:border-slate-800 font-semibold text-slate-700 dark:text-slate-200">Usuarios</div>
         <table className="w-full text-sm">
           <thead className="bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
@@ -150,7 +150,7 @@ export function UsuariosClient({ usuarios: initial, roles, sesiones: initialSes 
         </table>
       </div>
 
-      <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+      <div className="glass-card rounded-xl overflow-hidden">
         <div className="p-4 border-b border-slate-200 dark:border-slate-800 font-semibold text-slate-700 dark:text-slate-200">Sesiones Activas</div>
         <table className="w-full text-sm">
           <thead className="bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-300">

@@ -185,7 +185,7 @@ export function EquiposClient(props: {
         </button>
       </div>
 
-      <div className="bg-white dark:bg-slate-900 rounded-xl border shadow-sm p-4 flex flex-wrap gap-3">
+      <div className="glass-card rounded-xl p-4 flex flex-wrap gap-3">
         <div className="flex items-center gap-2 border rounded-lg px-3 py-1.5 flex-1 min-w-[200px]">
           <Search size={16} className="text-slate-400" />
           <input value={search} onChange={(e) => setSearch(e.target.value)} onKeyDown={(e) => {
@@ -209,7 +209,7 @@ export function EquiposClient(props: {
         </select>
       </div>
 
-      <div className="bg-white dark:bg-slate-900 rounded-xl border shadow-sm overflow-x-auto">
+      <div className="glass-card rounded-xl overflow-x-auto">
         <table className="w-full text-sm">
           <thead className="bg-slate-50/80 dark:bg-slate-800/50 text-slate-500 dark:text-slate-400 sticky top-0">
             <tr>
@@ -487,4 +487,5 @@ export function EquiposClient(props: {
     </div>
   );
 }
+
 

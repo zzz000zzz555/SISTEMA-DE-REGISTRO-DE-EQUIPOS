@@ -17,3 +17,4 @@ export function PermissionGuard({ permiso, children, fallback }: { permiso: stri
   if (perms.includes(permiso)) return <>{children}</>;
   return <>{fallback ?? null}</>;
 }
+

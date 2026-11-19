@@ -63,7 +63,7 @@ export function ModulosClient({ modulos: initialModulos, permisos: initialPermis
         <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-200">Gestión de Módulos</h1>
       </div>
 
-      <div className="bg-white dark:bg-slate-900 rounded-xl border shadow-sm p-4 flex items-center gap-3">
+      <div className="glass-card rounded-xl p-4 flex items-center gap-3">
         <div className="flex items-center gap-2 border rounded-lg px-3 py-1.5 flex-1">
           <Search size={16} className="text-slate-400" />
           <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="BUSCAR MÓDULO..." className="flex-1 outline-none text-sm uppercase" />
@@ -75,7 +75,7 @@ export function ModulosClient({ modulos: initialModulos, permisos: initialPermis
 
       <div className="space-y-3">
         {filtered.map((m) => (
-          <div key={m.id_modulo} className="bg-white dark:bg-slate-900 rounded-xl border shadow-sm p-4">
+          <div key={m.id_modulo} className="glass-card rounded-xl p-4">
             <div className="flex items-center justify-between">
               <div>
                 <div className="font-bold text-slate-800 dark:text-slate-200">{m.nombre_modulo}</div>
@@ -142,4 +142,5 @@ export function ModulosClient({ modulos: initialModulos, permisos: initialPermis
     </div>
   );
 }
+
 

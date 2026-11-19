@@ -17,7 +17,7 @@ export default function AuditoriaSesionesPage() {
       <div className="space-y-4">
         <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100">Auditoría de Sesiones y Accesos</h1>
         {loading ? <div className="text-slate-400">Cargando...</div> : (
-          <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-x-auto">
+          <div className="glass-card rounded-xl overflow-x-auto">
             <table className="w-full text-sm">
               <thead className="bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
                 <tr>
@@ -51,3 +51,4 @@ export default function AuditoriaSesionesPage() {
     </PermissionGuard>
   );
 }
+

@@ -69,3 +69,4 @@ export function ActaCargo({ parent, hijos, usuario }: { parent: InventarioView; 
     </div>
   );
 }
+

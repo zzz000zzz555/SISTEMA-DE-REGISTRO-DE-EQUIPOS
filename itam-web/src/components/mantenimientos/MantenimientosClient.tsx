@@ -65,7 +65,7 @@ export function MantenimientosClient({ mantenimientos: initial, equipos }: { man
           <Plus size={16} /> Nuevo
         </button>
       </div>
-      <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-x-auto">
+      <div className="glass-card rounded-xl overflow-x-auto">
         <table className="w-full text-sm">
           <thead className="bg-slate-50 dark:bg-slate-800/50 text-slate-500 dark:text-slate-400">
             <tr>

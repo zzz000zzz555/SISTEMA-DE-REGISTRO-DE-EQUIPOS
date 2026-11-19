@@ -9,7 +9,7 @@ export function AuditoriaClient({ rows }: { rows: any[] }) {
   return (
     <div className="space-y-4">
       <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-200">Auditoría Forense</h1>
-      <div className="bg-white dark:bg-slate-900 rounded-xl border shadow-sm overflow-x-auto">
+      <div className="glass-card rounded-xl overflow-x-auto">
         <table className="w-full text-sm">
           <thead className="bg-slate-50 dark:bg-slate-950"><tr><th className="text-left px-3 py-3">Fecha</th><th className="text-left px-3 py-3">Tabla</th><th className="text-left px-3 py-3">Operación</th><th className="text-left px-3 py-3">Registro</th><th className="text-left px-3 py-3">Usuario</th><th className="text-left px-3 py-3">IP</th><th className="text-right px-3 py-3">Detalle</th></tr></thead>
           <tbody>
@@ -50,4 +50,5 @@ export function AuditoriaClient({ rows }: { rows: any[] }) {
     </div>
   );
 }
+
 

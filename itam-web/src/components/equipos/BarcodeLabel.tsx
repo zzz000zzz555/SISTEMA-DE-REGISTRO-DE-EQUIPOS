@@ -50,3 +50,4 @@ export function BarcodeLabel({ codigo, codigoBarras, categoria }: { codigo: stri
   );
 }
 
+

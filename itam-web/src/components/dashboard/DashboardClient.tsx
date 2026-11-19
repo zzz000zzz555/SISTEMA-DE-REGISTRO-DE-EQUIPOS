@@ -94,7 +94,7 @@ export function DashboardClient({ total, equipos, mantenimientos }: Props) {
       </div>
 
       {/* Slicers */}
-      <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm p-4 flex flex-wrap gap-3">
+      <div className="glass-card rounded-xl p-4 flex flex-wrap gap-3">
         <select value={sede} onChange={(e) => setSede(e.target.value)} className={selectCls}>
           <option value="">Todas las áreas</option>
           {sedes.map((s) => <option key={s} value={s}>{s}</option>)}

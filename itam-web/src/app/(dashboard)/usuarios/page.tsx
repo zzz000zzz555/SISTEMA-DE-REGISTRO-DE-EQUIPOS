@@ -17,3 +17,4 @@ export default function UsuariosPage() {
   if (!props) return <div className="text-slate-400">Cargando...</div>;
   return <UsuariosClient {...props} />;
 }
+

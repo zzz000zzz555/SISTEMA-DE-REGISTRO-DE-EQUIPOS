@@ -47,3 +47,4 @@ export function WorkstationTree({ parent, hijos, onUnlink }: { parent: Inventari
   );
 }
 
+

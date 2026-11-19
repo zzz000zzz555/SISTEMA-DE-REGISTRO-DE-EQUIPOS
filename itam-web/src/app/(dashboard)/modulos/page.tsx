@@ -16,3 +16,4 @@ export default function ModulosPage() {
   if (!props) return <div className="text-slate-400">Cargando...</div>;
   return <ModulosClient {...props} />;
 }
+

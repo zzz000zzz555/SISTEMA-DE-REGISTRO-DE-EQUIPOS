@@ -33,3 +33,4 @@ export default function EquiposPage() {
   if (!props) return <div className="text-slate-400">Cargando...</div>;
   return <EquiposClient {...props} />;
 }
+
