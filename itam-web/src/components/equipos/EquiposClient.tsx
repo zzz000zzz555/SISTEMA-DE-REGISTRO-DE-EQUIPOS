@@ -88,12 +88,27 @@ export function EquiposClient(props: {
     id_estado: 0,
     id_ubicacion_actual: 0,
     id_equipo_padre: "",
+    centro_costo: "",
+    nombre_equipo: "",
     tipo_conexion: "",
     direccion_mac: "",
     direccion_ip: "",
-    valor_compra: "",
+    anydesk: "",
+    rustdesk: "",
+    sistema_operativo: "",
+    bits: "",
+    procesador: "",
+    cpu_ghz: "",
+    ram_gb: "",
+    tipo_ram: "",
+    disco_duro: "",
+    tipo_disco: "",
+    estado_disco: "",
     fecha_adquisicion: "",
     garantia_hasta: "",
+    valor_compra: "",
+    fecha_donacion: "",
+    fecha_alta: "",
     observaciones: "",
     specs: {} as Record<string, unknown>,
   });
@@ -128,13 +143,26 @@ export function EquiposClient(props: {
       id_estado: form.id_estado,
       id_ubicacion_actual: form.id_ubicacion_actual,
       id_equipo_padre: form.id_equipo_padre || null,
+      centro_costo: form.centro_costo || null,
+      nombre_equipo: form.nombre_equipo || null,
       tipo_conexion: form.tipo_conexion || null,
       direccion_mac: form.direccion_mac || null,
       direccion_ip: form.direccion_ip || null,
-      especificaciones_tecnicas: form.specs,
-      valor_compra: form.valor_compra ? Number(form.valor_compra) : null,
+      anydesk: form.anydesk || null,
+      rustdesk: form.rustdesk || null,
+      sistema_operativo: form.sistema_operativo || null,
+      bits: form.bits ? Number(form.bits) : null,
+      procesador: form.procesador || null,
+      cpu_ghz: form.cpu_ghz ? Number(form.cpu_ghz) : null,
+      ram_gb: form.ram_gb ? Number(form.ram_gb) : null,
+      tipo_ram: form.tipo_ram || null,
+      disco_duro: form.disco_duro || null,
+      tipo_disco: form.tipo_disco || null,
+      estado_disco: form.estado_disco || null,
       fecha_adquisicion: form.fecha_adquisicion || null,
       garantia_hasta: form.garantia_hasta || null,
+      fecha_donacion: form.fecha_donacion || null,
+      fecha_alta: form.fecha_alta || null,
       observaciones: form.observaciones || null,
       registrado_por: (await admin.from("usuarios").select("id_usuario").eq("username", "admin").single()).data?.id_usuario,
     }).select().single();
@@ -371,6 +399,21 @@ export function EquiposClient(props: {
               <input placeholder="Tipo conexión" value={form.tipo_conexion} onChange={(e) => setForm({ ...form, tipo_conexion: e.target.value })} className="border rounded-lg px-3 py-2 text-sm" />
               <input placeholder="Dirección MAC" value={form.direccion_mac} onChange={(e) => setForm({ ...form, direccion_mac: e.target.value })} className="border rounded-lg px-3 py-2 text-sm" />
               <input placeholder="Dirección IP" value={form.direccion_ip} onChange={(e) => setForm({ ...form, direccion_ip: e.target.value })} className="border rounded-lg px-3 py-2 text-sm" />
+              <input placeholder="Centro de Costo" value={form.centro_costo} onChange={(e) => setForm({ ...form, centro_costo: e.target.value })} className="border rounded-lg px-3 py-2 text-sm" />
+              <input placeholder="Nombre del Equipo" value={form.nombre_equipo} onChange={(e) => setForm({ ...form, nombre_equipo: e.target.value })} className="border rounded-lg px-3 py-2 text-sm" />
+              <input placeholder="AnyDesk" value={form.anydesk} onChange={(e) => setForm({ ...form, anydesk: e.target.value })} className="border rounded-lg px-3 py-2 text-sm" />
+              <input placeholder="RustDesk" value={form.rustdesk} onChange={(e) => setForm({ ...form, rustdesk: e.target.value })} className="border rounded-lg px-3 py-2 text-sm" />
+              <input placeholder="Sistema Operativo" value={form.sistema_operativo} onChange={(e) => setForm({ ...form, sistema_operativo: e.target.value })} className="border rounded-lg px-3 py-2 text-sm" />
+              <input placeholder="Bits (32/64)" value={form.bits} onChange={(e) => setForm({ ...form, bits: e.target.value })} className="border rounded-lg px-3 py-2 text-sm" />
+              <input placeholder="Procesador" value={form.procesador} onChange={(e) => setForm({ ...form, procesador: e.target.value })} className="border rounded-lg px-3 py-2 text-sm" />
+              <input placeholder="CPU (GHz)" value={form.cpu_ghz} onChange={(e) => setForm({ ...form, cpu_ghz: e.target.value })} className="border rounded-lg px-3 py-2 text-sm" />
+              <input placeholder="RAM (GB)" value={form.ram_gb} onChange={(e) => setForm({ ...form, ram_gb: e.target.value })} className="border rounded-lg px-3 py-2 text-sm" />
+              <input placeholder="Tipo RAM" value={form.tipo_ram} onChange={(e) => setForm({ ...form, tipo_ram: e.target.value })} className="border rounded-lg px-3 py-2 text-sm" />
+              <input placeholder="Disco Duro" value={form.disco_duro} onChange={(e) => setForm({ ...form, disco_duro: e.target.value })} className="border rounded-lg px-3 py-2 text-sm" />
+              <input placeholder="Tipo Disco" value={form.tipo_disco} onChange={(e) => setForm({ ...form, tipo_disco: e.target.value })} className="border rounded-lg px-3 py-2 text-sm" />
+              <input placeholder="Estado Disco" value={form.estado_disco} onChange={(e) => setForm({ ...form, estado_disco: e.target.value })} className="border rounded-lg px-3 py-2 text-sm" />
+              <input placeholder="Fecha Donación" type="date" value={form.fecha_donacion} onChange={(e) => setForm({ ...form, fecha_donacion: e.target.value })} className="border rounded-lg px-3 py-2 text-sm" />
+              <input placeholder="Fecha Alta" type="date" value={form.fecha_alta} onChange={(e) => setForm({ ...form, fecha_alta: e.target.value })} className="border rounded-lg px-3 py-2 text-sm" />
               <input placeholder="Valor compra" type="number" value={form.valor_compra} onChange={(e) => setForm({ ...form, valor_compra: e.target.value })} className="border rounded-lg px-3 py-2 text-sm" />
               <input type="date" value={form.fecha_adquisicion} onChange={(e) => setForm({ ...form, fecha_adquisicion: e.target.value })} className="border rounded-lg px-3 py-2 text-sm" />
               <input type="date" value={form.garantia_hasta} onChange={(e) => setForm({ ...form, garantia_hasta: e.target.value })} className="border rounded-lg px-3 py-2 text-sm" />

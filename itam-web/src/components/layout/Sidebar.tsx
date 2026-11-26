@@ -17,6 +17,7 @@ const groups = [
     items: [
       { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard, perm: null },
       { href: "/equipos", label: "Equipos", icon: Monitor, perm: "EQUIPOS_VER" },
+      { href: "/ip-inventario", label: "Inventario IP", icon: Monitor, perm: null },
       { href: "/reportes", label: "Reportes", icon: FileText, perm: null },
       { href: "/mantenimientos", label: "Mantenimientos", icon: Wrench, perm: null },
     ],
