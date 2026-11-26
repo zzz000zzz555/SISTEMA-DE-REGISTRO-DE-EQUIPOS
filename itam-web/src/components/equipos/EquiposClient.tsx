@@ -160,7 +160,10 @@ export function EquiposClient(props: {
           exportToExcel({
           title: "BERU — Inventario de Equipos",
           exportedBy: "admin",
-          columns: [
+          sheets: [{
+            name: "Inventario",
+            title: "Inventario de Equipos Patrimoniales",
+            columns: [
             { header: "Código Patrimonial", key: "codigo_patrimonial", width: 18 },
             { header: "Código Barras", key: "codigo_barras", width: 16 },
             { header: "N° Serie", key: "numero_serie", width: 16 },
@@ -186,7 +189,8 @@ export function EquiposClient(props: {
           summary: [
             { label: "Total registros", value: rows.length },
           ],
-          filename: "inventario_equipos.xlsx",
+        }],
+        filename: "BERU_Reporte_Inventario_" + new Date().toISOString().slice(0,10) + ".xlsx",
         });
         }} className="bg-slate-700 hover:bg-slate-800 text-white px-4 py-2 rounded-lg flex items-center gap-2 text-sm font-medium">
           <Download size={16} /> Exportar Excel

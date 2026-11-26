@@ -101,16 +101,20 @@ export function RolesClient({
         <button onClick={() => exportToExcel({
           title: "BERU — Gestión de Roles",
           exportedBy: "admin",
-          columns: [
-            { header: "ID", key: "id_rol", width: 8 },
-            { header: "Rol", key: "nombre_rol", width: 30 },
-            { header: "Descripción", key: "descripcion", width: 40 },
-            { header: "Nivel", key: "nivel_jerarquia", width: 8 },
-            { header: "Estado", key: "activo", width: 10 },
-          ],
-          rows: filtered.map((r) => ({ ...r, activo: r.activo ? "ACTIVO" : "ANULADO" })) as Record<string, unknown>[],
-          summary: [{ label: "Total roles", value: filtered.length }],
-          filename: "roles.xlsx",
+          sheets: [{
+            name: "Roles",
+            title: "Gestión de Roles",
+            columns: [
+              { header: "ID", key: "id_rol", width: 8 },
+              { header: "Rol", key: "nombre_rol", width: 30 },
+              { header: "Descripción", key: "descripcion", width: 40 },
+              { header: "Nivel", key: "nivel_jerarquia", width: 8 },
+              { header: "Estado", key: "activo", width: 10 },
+            ],
+            rows: filtered.map((r) => ({ ...r, activo: r.activo ? "ACTIVO" : "ANULADO" })) as Record<string, unknown>[],
+            summary: [{ label: "Total roles", value: filtered.length }],
+          }],
+          filename: "BERU_Reporte_Roles_" + new Date().toISOString().slice(0,10) + ".xlsx",
         })} className="bg-slate-700 hover:bg-slate-800 text-white px-4 py-2 rounded-lg flex items-center gap-2 text-sm font-medium">
           <Download size={16} /> Exportar Excel
         </button>
