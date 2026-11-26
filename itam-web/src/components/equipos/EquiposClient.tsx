@@ -158,39 +158,41 @@ export function EquiposClient(props: {
         <button onClick={() => {
           const rows = selected.size > 0 ? filtered.filter((e) => selected.has(e.id_equipo)) : filtered;
           exportToExcel({
-          title: "BERU — Inventario de Equipos",
+          title: "BERU - Inventario de Equipos",
           exportedBy: "admin",
-          sheets: [{
-            name: "Inventario",
-            title: "Inventario de Equipos Patrimoniales",
-            columns: [
-            { header: "Código Patrimonial", key: "codigo_patrimonial", width: 18 },
-            { header: "Código Barras", key: "codigo_barras", width: 16 },
-            { header: "N° Serie", key: "numero_serie", width: 16 },
-            { header: "Categoría", key: "categoria", width: 16 },
-            { header: "Tipo", key: "tipo_equipo", width: 16 },
-            { header: "Sede", key: "sede", width: 14 },
-            { header: "Área", key: "area_departamento", width: 18 },
-            { header: "Ubicación Física", key: "piso_oficina", width: 14 },
-            { header: "Marca", key: "marca", width: 12 },
-            { header: "Modelo", key: "modelo", width: 18 },
-            { header: "Color", key: "color", width: 10 },
-            { header: "Estado", key: "estado", width: 14 },
-            { header: "Usuario Asignado", key: "usuario_asignado", width: 18 },
-            { header: "Equipo Padre", key: "equipo_padre_codigo_patrimonial", width: 16 },
-            { header: "Tipo Conexión", key: "tipo_conexion", width: 16 },
-            { header: "Dirección IP", key: "direccion_ip", width: 16 },
-            { header: "Dirección MAC", key: "direccion_mac", width: 18 },
-            { header: "Fecha Adquisición", key: "fecha_adquisicion", width: 16 },
-            { header: "Garantía Hasta", key: "garantia_hasta", width: 16 },
-            { header: "Observaciones", key: "observaciones", width: 30 },
-          ],
-          rows: rows as unknown as Record<string, unknown>[],
-          summary: [
-            { label: "Total registros", value: rows.length },
-          ],
-        }],
-        filename: "BERU_Reporte_Inventario_" + new Date().toISOString().slice(0,10) + ".xlsx",
+          sheets: (() => {
+            const cols = [
+              { header: "Código Patrimonial", key: "codigo_patrimonial", width: 18 },
+              { header: "Código Barras", key: "codigo_barras", width: 16 },
+              { header: "N° Serie", key: "numero_serie", width: 16 },
+              { header: "Categoría", key: "categoria", width: 16 },
+              { header: "Tipo", key: "tipo_equipo", width: 16 },
+              { header: "Sede", key: "sede", width: 14 },
+              { header: "Área", key: "area_departamento", width: 18 },
+              { header: "Ubicación Física", key: "piso_oficina", width: 14 },
+              { header: "Marca", key: "marca", width: 12 },
+              { header: "Modelo", key: "modelo", width: 18 },
+              { header: "Color", key: "color", width: 10 },
+              { header: "Estado", key: "estado", width: 14 },
+              { header: "Usuario Asignado", key: "usuario_asignado", width: 18 },
+              { header: "Equipo Padre", key: "equipo_padre_codigo_patrimonial", width: 16 },
+              { header: "Tipo Conexión", key: "tipo_conexion", width: 16 },
+              { header: "Dirección IP", key: "direccion_ip", width: 16 },
+              { header: "Dirección MAC", key: "direccion_mac", width: 18 },
+              { header: "Fecha Adquisición", key: "fecha_adquisicion", width: 16 },
+              { header: "Garantía Hasta", key: "garantia_hasta", width: 16 },
+              { header: "Observaciones", key: "observaciones", width: 30 },
+            ];
+            const cats = [...new Set(rows.map((e: any) => e.categoria ?? "Otros"))];
+            return cats.map((cat: string) => ({
+              name: String(cat).slice(0, 31),
+              title: "Inventario - " + cat,
+              columns: cols,
+              rows: rows.filter((e: any) => (e.categoria ?? "Otros") === cat) as unknown as Record<string, unknown>[],
+              summary: [{ label: "Total registros", value: rows.filter((e: any) => (e.categoria ?? "Otros") === cat).length }],
+            }));
+          })(),
+          filename: "BERU_Reporte_Inventario_" + new Date().toISOString().slice(0,10) + ".xlsx",
         });
         }} className="bg-slate-700 hover:bg-slate-800 text-white px-4 py-2 rounded-lg flex items-center gap-2 text-sm font-medium">
           <Download size={16} /> Exportar Excel
