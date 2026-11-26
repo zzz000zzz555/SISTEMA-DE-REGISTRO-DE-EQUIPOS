@@ -28,12 +28,13 @@ const CAT_COLS = [
 ];
 
 const MANT_COLS = [
-  { header: "Equipo", key: "equipo", width: 16 },
+  { header: "C.P.", key: "equipo", width: 16 },
+  { header: "Sede", key: "sede", width: 16 },
+  { header: "Denominación", key: "denominacion", width: 22 },
   { header: "Tipo Mantenimiento", key: "tipo_mantenimiento", width: 18 },
   { header: "Descripción Falla", key: "descripcion_falla", width: 40 },
   { header: "Trabajo Realizado", key: "trabajo_realizado", width: 40 },
-  { header: "Costo", key: "costo", width: 12 },
-  { header: "Técnico", key: "tecnico", width: 16 },
+  { header: "Técnico / Responsable", key: "tecnico", width: 18 },
   { header: "Estado Servicio", key: "estado_servicio", width: 16 },
   { header: "Fecha Inicio", key: "fecha_registro", width: 18 },
   { header: "Fecha Fin", key: "fecha_finalizacion", width: 18 },
@@ -99,8 +100,8 @@ export function ReportesClient({ inventario, mantenimientos, historial, equipos,
   function exportMantenimientos() {
     const rows = mantenimientos.map((m: any) => ({
       ...m,
-      equipo: equipoLabel(m.id_equipo),
-      tecnico: userLabel(m.id_tecnico_responsable),
+      equipo: m.codigo_patrimonial ?? equipoLabel(m.id_equipo),
+      tecnico: m.responsable_bien ?? userLabel(m.id_tecnico_responsable),
     }));
     exportToExcel({
       title: "BERU - Reporte de Mantenimientos",
@@ -110,10 +111,7 @@ export function ReportesClient({ inventario, mantenimientos, historial, equipos,
         title: "Historial de Mantenimientos",
         columns: MANT_COLS,
         rows,
-        summary: [
-          { label: "Total mantenimientos", value: rows.length },
-          { label: "Costo total", value: "S/ " + rows.reduce((s: number, m: any) => s + Number(m.costo ?? 0), 0).toLocaleString() },
-        ],
+        summary: [{ label: "Total mantenimientos", value: rows.length }],
       }],
       filename: "BERU_Reporte_Mantenimientos_" + new Date().toISOString().slice(0, 10) + ".xlsx",
     });
@@ -201,7 +199,7 @@ export function ReportesClient({ inventario, mantenimientos, historial, equipos,
             <FileSpreadsheet size={24} className="text-amber-600 dark:text-amber-400" />
             <div>
               <h3 className="font-semibold text-slate-800 dark:text-slate-100">Mantenimientos</h3>
-              <p className="text-xs text-slate-500 dark:text-slate-400">Historial completo con técnico, costo y estado.</p>
+              <p className="text-xs text-slate-500 dark:text-slate-400">Historial completo con C.P., diagnóstico, técnico y estado.</p>
             </div>
           </div>
           <button onClick={exportMantenimientos} className={btnCls}>

@@ -1,8 +1,9 @@
 "use client";
 
-import { useState, useMemo } from "react";
-import { Plus, Search, Download, QrCode, Printer, Monitor, FileText, Eye, Pencil, Ban, Trash2 } from "lucide-react";
+import { useState, useMemo, useEffect } from "react";
+import { Plus, Search, Download, QrCode, Monitor, FileText, Eye, Ban } from "lucide-react";
 import { exportToExcel } from "@/lib/excel";
+import { Pagination, usePagination } from "@/components/ui/Pagination";
 import { BarcodeLabel } from "./BarcodeLabel";
 import { WorkstationTree } from "./WorkstationTree";
 import { ActaCargo } from "./ActaCargo";
@@ -106,7 +107,6 @@ export function EquiposClient(props: {
     estado_disco: "",
     fecha_adquisicion: "",
     garantia_hasta: "",
-    valor_compra: "",
     fecha_donacion: "",
     fecha_alta: "",
     observaciones: "",
@@ -122,6 +122,12 @@ export function EquiposClient(props: {
       return true;
     });
   }, [inventario, catFilter, estadoFilter, sedeFilter, search]);
+
+  const { page, setPage, pageSize, setPageSize, totalPages, start, end, paged, total } = usePagination(filtered);
+
+  useEffect(() => {
+    setPage(1);
+  }, [catFilter, estadoFilter, sedeFilter, search, setPage]);
 
   const categoriaNombre = categorias.find((c) => c.id_categoria === form.id_categoria)?.nombre ?? "";
   const specFields = SPEC_FIELDS[categoriaNombre] ?? [];
@@ -175,7 +181,7 @@ export function EquiposClient(props: {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap items-center justify-between gap-2">
         <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-200">Inventario de Equipos</h1>
         <button onClick={() => setModalOpen(true)} className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 text-sm font-medium">
           <Plus size={16} /> Nuevo Equipo
@@ -271,88 +277,107 @@ export function EquiposClient(props: {
         </select>
       </div>
 
-      <div className="glass-card rounded-xl overflow-x-auto">
-        <table className="w-full text-sm">
-          <thead className="bg-slate-50/80 dark:bg-slate-800/50 text-slate-500 dark:text-slate-400 sticky top-0">
-            <tr>
-              <th className="px-3 py-3 w-8">
-                <input type="checkbox" checked={filtered.length > 0 && selected.size === filtered.length} onChange={(e) => {
-                  if (e.target.checked) setSelected(new Set(filtered.map((x) => x.id_equipo)));
-                  else setSelected(new Set());
-                }} className="accent-indigo-600" />
-              </th>
-              <th className="text-left px-3 py-3">Código Pat.</th>
-              <th className="text-left px-3 py-3">Cód. Barras</th>
-              <th className="text-left px-3 py-3">Categoría</th>
-              <th className="text-left px-3 py-3">Marca / Modelo</th>
-              <th className="text-left px-3 py-3">Estado</th>
-              <th className="text-left px-3 py-3">Área</th>
-              <th className="text-left px-3 py-3">Usuario Asignado</th>
-              <th className="text-left px-3 py-3">Padre</th>
-              <th className="text-left px-3 py-3">Valor</th>
-              <th className="text-right px-3 py-3">Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filtered.map((e) => (
-              <tr key={e.id_equipo} className="border-t hover:bg-slate-50 dark:hover:bg-slate-800">
-                <td className="px-3 py-2">
-                  <input type="checkbox" checked={selected.has(e.id_equipo)} onChange={(ev) => {
+      <div className="glass-card rounded-xl overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead className="bg-slate-50/80 dark:bg-slate-800/50 text-slate-500 dark:text-slate-400">
+              <tr>
+                <th className="px-3 py-3 w-8">
+                  <input type="checkbox" checked={paged.length > 0 && paged.every((x) => selected.has(x.id_equipo))} onChange={(e) => {
                     const n = new Set(selected);
-                    if (ev.target.checked) n.add(e.id_equipo); else n.delete(e.id_equipo);
+                    if (e.target.checked) paged.forEach((x) => n.add(x.id_equipo));
+                    else paged.forEach((x) => n.delete(x.id_equipo));
                     setSelected(n);
                   }} className="accent-indigo-600" />
-                </td>
-                <td className="px-3 py-2 font-mono text-xs">{e.codigo_patrimonial}</td>
-                <td className="px-3 py-2 font-mono text-xs">{e.codigo_barras}</td>
-                <td className="px-3 py-2">{e.categoria}</td>
-                <td className="px-3 py-2">{e.marca} {e.modelo ?? ""}</td>
-                <td className="px-3 py-2">
-                  <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-xs font-medium border ${
-                    e.estado === "Operativo" || e.estado === "Nuevo" ? "bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-900/30 dark:text-emerald-300 dark:border-emerald-800" :
-                    e.estado === "En Mantenimiento" ? "bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-900/30 dark:text-amber-300 dark:border-amber-800" :
-                    "bg-red-50 text-red-700 border-red-200 dark:bg-red-900/30 dark:text-red-300 dark:border-red-800"
-                  }`}>
-                    <span className="w-1.5 h-1.5 rounded-full bg-current" />
-                    {e.estado}
-                  </span>
-                </td>
-                <td className="px-3 py-2">{e.area_departamento}</td>
-                <td className="px-3 py-2 text-xs text-slate-600 dark:text-slate-400">{e.usuario_asignado ?? "—"}</td>
-                <td className="px-3 py-2 text-xs">{e.equipo_padre_codigo_patrimonial ?? "—"}</td>
-                <td className="px-3 py-2">S/ {Number(e.valor_compra ?? 0).toLocaleString()}</td>
-                <td className="px-3 py-2 text-right">
-                  <div className="inline-flex gap-0.5">
-                    <button onClick={() => setViewEquipo(e)} className="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded text-slate-600 dark:text-slate-400" title="Ver ficha"><Eye size={14} /></button>
-                    {e.categoria === "PC/Workstation" && (
-                      <>
-                        <button onClick={() => setWsModal(e)} className="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded text-slate-600 dark:text-slate-400" title="Ver estación de trabajo">
-                          <Monitor size={14} />
-                        </button>
-                        <button onClick={() => setActaModal(e)} className="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded text-slate-600 dark:text-slate-400" title="Emitir Acta de Cargo">
-                          <FileText size={14} />
-                        </button>
-                      </>
-                    )}
-                    <button onClick={() => setLabelModal(e)} className="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded text-slate-600 dark:text-slate-400" title="Generar etiqueta patrimonial">
-                      <QrCode size={14} />
-                    </button>
-                    <button onClick={async () => {
-                      const sb = createClient();
-                      const deBaja = estados.find((x) => x.nombre === "De Baja");
-                      if (deBaja) {
-                        await sb.from("equipos").update({ id_estado: deBaja.id_estado }).eq("id_equipo", e.id_equipo);
-                        setInventario((inv) => inv.map((x) => x.id_equipo === e.id_equipo ? { ...x, id_estado: deBaja.id_estado, estado: "De Baja" } : x));
-                      }
-                    }} className="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded text-amber-600 dark:text-amber-400" title="Dar de baja">
-                      <Ban size={14} />
-                    </button>
-                  </div>
-                </td>
+                </th>
+                <th className="text-left px-3 py-3 w-14">#</th>
+                <th className="text-left px-3 py-3">Código Pat.</th>
+                <th className="text-left px-3 py-3">Cód. Barras</th>
+                <th className="text-left px-3 py-3">Categoría</th>
+                <th className="text-left px-3 py-3">Marca / Modelo</th>
+                <th className="text-left px-3 py-3">Estado</th>
+                <th className="text-left px-3 py-3">Área</th>
+                <th className="text-left px-3 py-3">Usuario Asignado</th>
+                <th className="text-left px-3 py-3">Padre</th>
+                <th className="text-right px-3 py-3">Acciones</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {paged.map((e, idx) => (
+                <tr key={e.id_equipo} className="border-t hover:bg-slate-50 dark:hover:bg-slate-800">
+                  <td className="px-3 py-2">
+                    <input type="checkbox" checked={selected.has(e.id_equipo)} onChange={(ev) => {
+                      const n = new Set(selected);
+                      if (ev.target.checked) n.add(e.id_equipo); else n.delete(e.id_equipo);
+                      setSelected(n);
+                    }} className="accent-indigo-600" />
+                  </td>
+                  <td className="px-3 py-2 text-xs text-slate-400 dark:text-slate-500" title={`ID: ${e.id_equipo}`}>
+                    {start + idx + 1}
+                  </td>
+                  <td className="px-3 py-2 font-mono text-xs">{e.codigo_patrimonial}</td>
+                  <td className="px-3 py-2 font-mono text-xs">{e.codigo_barras}</td>
+                  <td className="px-3 py-2">{e.categoria}</td>
+                  <td className="px-3 py-2">{e.marca} {e.modelo ?? ""}</td>
+                  <td className="px-3 py-2">
+                    <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-xs font-medium border ${
+                      e.estado === "Operativo" || e.estado === "Nuevo" ? "bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-900/30 dark:text-emerald-300 dark:border-emerald-800" :
+                      e.estado === "En Mantenimiento" ? "bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-900/30 dark:text-amber-300 dark:border-amber-800" :
+                      "bg-red-50 text-red-700 border-red-200 dark:bg-red-900/30 dark:text-red-300 dark:border-red-800"
+                    }`}>
+                      <span className="w-1.5 h-1.5 rounded-full bg-current" />
+                      {e.estado}
+                    </span>
+                  </td>
+                  <td className="px-3 py-2">{e.area_departamento}</td>
+                  <td className="px-3 py-2 text-xs text-slate-600 dark:text-slate-400">{e.usuario_asignado ?? "—"}</td>
+                  <td className="px-3 py-2 text-xs">{e.equipo_padre_codigo_patrimonial ?? "—"}</td>
+                  <td className="px-3 py-2 text-right">
+                    <div className="inline-flex gap-0.5">
+                      <button onClick={() => setViewEquipo(e)} className="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded text-slate-600 dark:text-slate-400" title="Ver ficha"><Eye size={14} /></button>
+                      {e.categoria === "PC/Workstation" && (
+                        <>
+                          <button onClick={() => setWsModal(e)} className="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded text-slate-600 dark:text-slate-400" title="Ver estación de trabajo">
+                            <Monitor size={14} />
+                          </button>
+                          <button onClick={() => setActaModal(e)} className="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded text-slate-600 dark:text-slate-400" title="Emitir Acta de Cargo">
+                            <FileText size={14} />
+                          </button>
+                        </>
+                      )}
+                      <button onClick={() => setLabelModal(e)} className="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded text-slate-600 dark:text-slate-400" title="Generar etiqueta patrimonial">
+                        <QrCode size={14} />
+                      </button>
+                      <button onClick={async () => {
+                        const sb = createClient();
+                        const deBaja = estados.find((x) => x.nombre === "De Baja");
+                        if (deBaja) {
+                          await sb.from("equipos").update({ id_estado: deBaja.id_estado }).eq("id_equipo", e.id_equipo);
+                          setInventario((inv) => inv.map((x) => x.id_equipo === e.id_equipo ? { ...x, id_estado: deBaja.id_estado, estado: "De Baja" } : x));
+                        }
+                      }} className="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded text-amber-600 dark:text-amber-400" title="Dar de baja">
+                        <Ban size={14} />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+              {paged.length === 0 && (
+                <tr><td colSpan={11} className="text-center py-8 text-slate-400">Sin registros para los filtros seleccionados</td></tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+        <Pagination
+          page={page}
+          pageSize={pageSize}
+          total={total}
+          totalPages={totalPages}
+          start={start}
+          end={end}
+          onPageChange={setPage}
+          onPageSizeChange={setPageSize}
+        />
       </div>
 
       {modalOpen && (
@@ -414,7 +439,6 @@ export function EquiposClient(props: {
               <input placeholder="Estado Disco" value={form.estado_disco} onChange={(e) => setForm({ ...form, estado_disco: e.target.value })} className="border rounded-lg px-3 py-2 text-sm" />
               <input placeholder="Fecha Donación" type="date" value={form.fecha_donacion} onChange={(e) => setForm({ ...form, fecha_donacion: e.target.value })} className="border rounded-lg px-3 py-2 text-sm" />
               <input placeholder="Fecha Alta" type="date" value={form.fecha_alta} onChange={(e) => setForm({ ...form, fecha_alta: e.target.value })} className="border rounded-lg px-3 py-2 text-sm" />
-              <input placeholder="Valor compra" type="number" value={form.valor_compra} onChange={(e) => setForm({ ...form, valor_compra: e.target.value })} className="border rounded-lg px-3 py-2 text-sm" />
               <input type="date" value={form.fecha_adquisicion} onChange={(e) => setForm({ ...form, fecha_adquisicion: e.target.value })} className="border rounded-lg px-3 py-2 text-sm" />
               <input type="date" value={form.garantia_hasta} onChange={(e) => setForm({ ...form, garantia_hasta: e.target.value })} className="border rounded-lg px-3 py-2 text-sm" />
             </div>
@@ -478,7 +502,6 @@ export function EquiposClient(props: {
               <div><span className="font-semibold">Estado:</span> {viewEquipo.estado}</div>
               <div><span className="font-semibold">Área:</span> {viewEquipo.area_departamento}</div>
               <div><span className="font-semibold">Padre:</span> {viewEquipo.equipo_padre_codigo_patrimonial ?? "—"}</div>
-              <div><span className="font-semibold">Valor:</span> S/ {Number(viewEquipo.valor_compra ?? 0).toLocaleString()}</div>
               <div><span className="font-semibold">IP:</span> <span className="font-mono">{viewEquipo.direccion_ip ?? "—"}</span></div>
               <div><span className="font-semibold">MAC:</span> <span className="font-mono">{viewEquipo.direccion_mac ?? "—"}</span></div>
             </div>

@@ -3,6 +3,7 @@
 import { usePathname } from "next/navigation";
 import {
   LayoutDashboard, Monitor, Wrench, Boxes, ShieldCheck, Users, FileText, Activity,
+  Network, Keyboard, Printer, HardDrive, Server, Globe2, KeyRound, Package,
 } from "lucide-react";
 import type { Usuario } from "@/lib/types";
 import { LogoutButton } from "./LogoutButton";
@@ -13,13 +14,37 @@ type Props = { user: Usuario; permissions: string[] };
 
 const groups = [
   {
-    label: "Operaciones",
+    label: "General",
     items: [
       { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard, perm: null },
-      { href: "/equipos", label: "Equipos", icon: Monitor, perm: "EQUIPOS_VER" },
-      { href: "/ip-inventario", label: "Inventario IP", icon: Monitor, perm: null },
       { href: "/reportes", label: "Reportes", icon: FileText, perm: null },
-      { href: "/mantenimientos", label: "Mantenimientos", icon: Wrench, perm: null },
+    ],
+  },
+  {
+    label: "Módulo 1 · Servicios",
+    items: [
+      { href: "/informes", label: "1.1 Informes Técnicos", icon: FileText, perm: null },
+      { href: "/almacen", label: "1.3 Almacén de Cómputo", icon: Package, perm: null },
+      { href: "/mantenimientos", label: "1.2 Mantenimientos", icon: Wrench, perm: null },
+    ],
+  },
+  {
+    label: "Módulo 2 · Redes",
+    items: [
+      { href: "/ip-inventario", label: "2.1 Matriz IP / Subredes", icon: Network, perm: null },
+      { href: "/ip-rangos", label: "2.2 Rangos por Área", icon: Network, perm: null },
+      { href: "/ip-pronatel", label: "2.3 IP PRONATEL", icon: Globe2, perm: null },
+      { href: "/anydesk", label: "2.4 AnyDesk Emergencia", icon: KeyRound, perm: null },
+    ],
+  },
+  {
+    label: "Módulo 3 · Inventario",
+    items: [
+      { href: "/equipos", label: "3.1 Computadoras", icon: Monitor, perm: "EQUIPOS_VER" },
+      { href: "/monitores", label: "3.2 Monitores", icon: Server, perm: null },
+      { href: "/teclados", label: "3.3 Teclados", icon: Keyboard, perm: null },
+      { href: "/impresoras", label: "3.4 Impresoras", icon: Printer, perm: null },
+      { href: "/otros-equipos", label: "3.5 Otros Equipos", icon: HardDrive, perm: null },
     ],
   },
   {

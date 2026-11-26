@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line, CartesianGrid } from "recharts";
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
 import { SlidersHorizontal } from "lucide-react";
 
 type Props = {
@@ -32,30 +32,34 @@ export function DashboardClient({ total, equipos, mantenimientos }: Props) {
 
   const kpis = useMemo(() => {
     const porEstado: Record<string, number> = {};
-    let valorTotal = 0;
     let perifericosVinculados = 0;
     let perifericosSueltos = 0;
     for (const e of filtered) {
       const est = e.estado ?? "Otros";
       porEstado[est] = (porEstado[est] ?? 0) + 1;
-      valorTotal += Number(e.valor_compra ?? 0);
       if (e.id_equipo_padre) perifericosVinculados += 1;
       else if (e.categoria !== "PC/Workstation") perifericosSueltos += 1;
     }
-    const costoMant = mantenimientos.reduce((s: number, m: { costo: number | null }) => s + Number(m.costo ?? 0), 0);
     const operativos = porEstado["Operativo"] ?? 0;
     const enMant = porEstado["En Mantenimiento"] ?? 0;
     const pctOper = filtered.length ? Math.round((operativos / filtered.length) * 100) : 0;
-    return { totalEquipos: filtered.length, valorTotal, pctOperativos: pctOper, enMantenimiento: enMant, perifericosVinculados, perifericosSueltos, costoMantenimiento: costoMant };
-  }, [filtered, mantenimientos]);
+    return { totalEquipos: filtered.length, pctOperativos: pctOper, enMantenimiento: enMant, perifericosVinculados, perifericosSueltos };
+  }, [filtered]);
 
   const porCategoria = useMemo(() => {
-    const r: Record<string, { count: number; valor: number }> = {};
+    const r: Record<string, number> = {};
     for (const e of filtered) {
       const cat = e.categoria ?? "Otros";
-      if (!r[cat]) r[cat] = { count: 0, valor: 0 };
-      r[cat].count += 1;
-      r[cat].valor += Number(e.valor_compra ?? 0);
+      r[cat] = (r[cat] ?? 0) + 1;
+    }
+    return r;
+  }, [filtered]);
+
+  const porMarca = useMemo(() => {
+    const r: Record<string, number> = {};
+    for (const e of filtered) {
+      const marca = e.marca ?? "Sin marca";
+      r[marca] = (r[marca] ?? 0) + 1;
     }
     return r;
   }, [filtered]);
@@ -78,7 +82,8 @@ export function DashboardClient({ total, equipos, mantenimientos }: Props) {
     return r;
   }, [filtered]);
 
-  const catData = Object.entries(porCategoria).map(([name, v]) => ({ name, count: v.count, valor: v.valor }));
+  const catData = Object.entries(porCategoria).map(([name, count]) => ({ name, count }));
+  const marcaData = Object.entries(porMarca).map(([name, value]) => ({ name, value }));
   const estadoData = Object.entries(porEstado).map(([name, value]) => ({ name, value }));
   const sedeData = Object.entries(porSede).map(([name, value]) => ({ name, value }));
 
@@ -119,15 +124,15 @@ export function DashboardClient({ total, equipos, mantenimientos }: Props) {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <KpiCard title="Total Activos" value={kpis.totalEquipos} sub={`Valor: S/ ${kpis.valorTotal.toLocaleString()}`} color="indigo" />
+        <KpiCard title="Total Activos" value={kpis.totalEquipos} sub="Inventario general" color="indigo" />
         <KpiCard title="% Operativos" value={`${kpis.pctOperativos}%`} sub={`En mant.: ${kpis.enMantenimiento}`} color="green" />
         <KpiCard title="Periféricos Vinculados" value={kpis.perifericosVinculados} sub={`Sueltos: ${kpis.perifericosSueltos}`} color="amber" />
-        <KpiCard title="Costo Mantenimiento" value={`S/ ${kpis.costoMantenimiento.toLocaleString()}`} sub="Acumulado" color="red" />
+        <KpiCard title="Mantenimientos" value={mantenimientos.length} sub="Registros históricos" color="red" />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <div className="bg-white dark:bg-slate-900 rounded-xl p-4 shadow-sm border border-slate-200 dark:border-slate-800">
-          <h3 className="font-semibold text-slate-700 dark:text-slate-200 mb-3">Activos y Valor por Categoría</h3>
+          <h3 className="font-semibold text-slate-700 dark:text-slate-200 mb-3">Activos por Categoría</h3>
           <ResponsiveContainer width="100%" height={260}>
             <BarChart data={catData}>
               <XAxis dataKey="name" tick={{ fontSize: 11 }} />
@@ -163,15 +168,14 @@ export function DashboardClient({ total, equipos, mantenimientos }: Props) {
           </ResponsiveContainer>
         </div>
         <div className="bg-white dark:bg-slate-900 rounded-xl p-4 shadow-sm border border-slate-200 dark:border-slate-800">
-          <h3 className="font-semibold text-slate-700 dark:text-slate-200 mb-3">Valor Patrimonial por Categoría (S/)</h3>
+          <h3 className="font-semibold text-slate-700 dark:text-slate-200 mb-3">Equipos por Marca</h3>
           <ResponsiveContainer width="100%" height={260}>
-            <LineChart data={catData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" tick={{ fontSize: 11 }} />
-              <YAxis />
+            <BarChart data={marcaData} layout="vertical">
+              <XAxis type="number" />
+              <YAxis dataKey="name" type="category" width={110} tick={{ fontSize: 11 }} />
               <Tooltip />
-              <Line type="monotone" dataKey="valor" stroke="#f59e0b" strokeWidth={2} />
-            </LineChart>
+              <Bar dataKey="value" fill="#f59e0b" />
+            </BarChart>
           </ResponsiveContainer>
         </div>
       </div>

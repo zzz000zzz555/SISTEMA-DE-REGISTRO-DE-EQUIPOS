@@ -1,8 +1,9 @@
 "use client";
 
-import { useState, useMemo } from "react";
-import { Plus, Search, Copy } from "lucide-react";
+import { useState, useMemo, useEffect } from "react";
+import { Plus, Search, Pencil, Unlock } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
+import { Pagination, usePagination } from "@/components/ui/Pagination";
 
 const ESTADO_COLORS: Record<string, string> = {
   LIBRE: "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300",
@@ -27,6 +28,12 @@ export function IPInventarioClient({ items: initial }: { items: any[] }) {
     (!search || i.ip_completa?.includes(search) || i.nombre_equipo?.toLowerCase().includes(search.toLowerCase()) ||
      i.codigo_patrimonial?.includes(search) || i.ubicacion?.toLowerCase().includes(search.toLowerCase()))
   ), [items, subred, search]);
+
+  const { page, setPage, pageSize, setPageSize, totalPages, start, end, paged, total } = usePagination(filtered, 50);
+
+  useEffect(() => {
+    setPage(1);
+  }, [subred, search, setPage]);
 
   const ipCompleta = `172.16.${subred.replace("IP", "")}.${form.octeto_4}`;
 
@@ -103,67 +110,80 @@ export function IPInventarioClient({ items: initial }: { items: any[] }) {
         </div>
       </div>
 
-      <div className="glass-card rounded-xl overflow-x-auto">
-        <table className="w-full text-sm">
-          <thead className="bg-slate-50/80 dark:bg-slate-800/50 text-slate-500 dark:text-slate-400 sticky top-0">
-            <tr>
-              <th className="text-left px-3 py-2.5">IP</th>
-              <th className="text-left px-3 py-2.5">Estado</th>
-              <th className="text-left px-3 py-2.5">Tipo</th>
-              <th className="text-left px-3 py-2.5">F/V</th>
-              <th className="text-left px-3 py-2.5">C.P.</th>
-              <th className="text-left px-3 py-2.5">Ubicación</th>
-              <th className="text-left px-3 py-2.5">Marca</th>
-              <th className="text-left px-3 py-2.5">Nombre Equipo</th>
-              <th className="text-left px-3 py-2.5">Usuario</th>
-              <th className="text-left px-3 py-2.5">AnyDesk</th>
-              <th className="text-left px-3 py-2.5">RustDesk</th>
-              <th className="text-left px-3 py-2.5">Personal</th>
-              <th className="text-left px-3 py-2.5">Observación</th>
-              <th className="text-right px-3 py-2.5">Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filtered.slice(0, 100).map((item) => (
-              <tr key={item.id_ip} className="border-t border-slate-100 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800/50">
-                <td className="px-3 py-2 font-mono text-xs text-slate-700 dark:text-slate-300">{item.ip_completa}</td>
-                <td className="px-3 py-2">
-                  <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-xs font-medium border ${ESTADO_COLORS[item.estado] ?? "bg-slate-100 text-slate-600"}`}>
-                    <span className="w-1.5 h-1.5 rounded-full bg-current" />
-                    {item.estado}
-                  </span>
-                </td>
-                <td className="px-3 py-2 text-slate-600 dark:text-slate-400 text-xs">{item.tipo_dispositivo ?? "—"}</td>
-                <td className="px-3 py-2 text-slate-600 dark:text-slate-400 text-xs">{item.fisico_virtual ?? "—"}</td>
-                <td className="px-3 py-2 font-mono text-xs text-slate-700 dark:text-slate-300">{item.codigo_patrimonial ?? "—"}</td>
-                <td className="px-3 py-2 text-slate-600 dark:text-slate-400 text-xs truncate max-w-[120px]">{item.ubicacion ?? "—"}</td>
-                <td className="px-3 py-2 text-slate-600 dark:text-slate-400 text-xs">{item.marca ?? "—"}</td>
-                <td className="px-3 py-2 text-slate-600 dark:text-slate-400 text-xs">{item.nombre_equipo ?? "—"}</td>
-                <td className="px-3 py-2 text-slate-600 dark:text-slate-400 text-xs">{item.usuario_windows ?? "—"}</td>
-                <td className="px-3 py-2 font-mono text-xs text-slate-600 dark:text-slate-400">
-                  {item.anydesk ? <button onClick={() => copyText(item.anydesk)} className="hover:text-indigo-600 dark:hover:text-indigo-400" title="Copiar">{item.anydesk}</button> : "—"}
-                </td>
-                <td className="px-3 py-2 font-mono text-xs text-slate-600 dark:text-slate-400">{item.rustdesk ?? "—"}</td>
-                <td className="px-3 py-2 text-slate-600 dark:text-slate-400 text-xs truncate max-w-[100px]">{item.personal_asignado ?? "—"}</td>
-                <td className="px-3 py-2 text-slate-500 dark:text-slate-400 text-xs truncate max-w-[120px]">{item.observacion ?? "—"}</td>
-                <td className="px-3 py-2 text-right">
-                  <div className="inline-flex gap-0.5">
-                    <button onClick={() => { setForm({ subred_tab: item.subred_tab, octeto_4: item.octeto_4, tipo_dispositivo: item.tipo_dispositivo ?? "", fisico_virtual: item.fisico_virtual ?? "FISICO", codigo_patrimonial: item.codigo_patrimonial ?? "", ubicacion: item.ubicacion ?? "", marca: item.marca ?? "", nombre_equipo: item.nombre_equipo ?? "", usuario_windows: item.usuario_windows ?? "", anydesk: item.anydesk ?? "", rustdesk: item.rustdesk ?? "", clave_anydesk: item.clave_anydesk ?? "", personal_asignado: item.personal_asignado ?? "", observacion: item.observacion ?? "", estado: item.estado }); setModalOpen(true); }} className="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded text-indigo-600 dark:text-indigo-400" title="Editar">
-                      ✏️
-                    </button>
-                    {item.estado !== "LIBRE" && (
-                      <button onClick={() => liberar(item)} className="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded text-amber-600 dark:text-amber-400" title="Liberar IP">
-                        🔓
-                      </button>
-                    )}
-                  </div>
-                </td>
+      <div className="glass-card rounded-xl overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead className="bg-slate-50/80 dark:bg-slate-800/50 text-slate-500 dark:text-slate-400">
+              <tr>
+                <th className="text-left px-3 py-2.5 w-14">#</th>
+                <th className="text-left px-3 py-2.5">IP</th>
+                <th className="text-left px-3 py-2.5">Estado</th>
+                <th className="text-left px-3 py-2.5">Tipo</th>
+                <th className="text-left px-3 py-2.5">F/V</th>
+                <th className="text-left px-3 py-2.5">C.P.</th>
+                <th className="text-left px-3 py-2.5">Ubicación</th>
+                <th className="text-left px-3 py-2.5">Marca</th>
+                <th className="text-left px-3 py-2.5">Nombre Equipo</th>
+                <th className="text-left px-3 py-2.5">Usuario</th>
+                <th className="text-left px-3 py-2.5">AnyDesk</th>
+                <th className="text-left px-3 py-2.5">RustDesk</th>
+                <th className="text-left px-3 py-2.5">Personal</th>
+                <th className="text-left px-3 py-2.5">Observación</th>
+                <th className="text-right px-3 py-2.5">Acciones</th>
               </tr>
-            ))}
-            {filtered.length === 0 && <tr><td colSpan={14} className="text-center py-8 text-slate-400">Sin registros en esta subred</td></tr>}
-            {filtered.length > 100 && <tr><td colSpan={14} className="text-center py-4 text-slate-400 text-xs">Mostrando 100 de {filtered.length} registros. Use el buscador para filtrar.</td></tr>}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {paged.map((item, idx) => (
+                <tr key={item.id_ip} className="border-t border-slate-100 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800/50">
+                  <td className="px-3 py-2 text-xs text-slate-400 dark:text-slate-500" title={`ID: ${item.id_ip}`}>{start + idx + 1}</td>
+                  <td className="px-3 py-2 font-mono text-xs text-slate-700 dark:text-slate-300">{item.ip_completa}</td>
+                  <td className="px-3 py-2">
+                    <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-xs font-medium border ${ESTADO_COLORS[item.estado] ?? "bg-slate-100 text-slate-600"}`}>
+                      <span className="w-1.5 h-1.5 rounded-full bg-current" />
+                      {item.estado}
+                    </span>
+                  </td>
+                  <td className="px-3 py-2 text-slate-600 dark:text-slate-400 text-xs">{item.tipo_dispositivo ?? "—"}</td>
+                  <td className="px-3 py-2 text-slate-600 dark:text-slate-400 text-xs">{item.fisico_virtual ?? "—"}</td>
+                  <td className="px-3 py-2 font-mono text-xs text-slate-700 dark:text-slate-300">{item.codigo_patrimonial ?? "—"}</td>
+                  <td className="px-3 py-2 text-slate-600 dark:text-slate-400 text-xs truncate max-w-[120px]">{item.ubicacion ?? "—"}</td>
+                  <td className="px-3 py-2 text-slate-600 dark:text-slate-400 text-xs">{item.marca ?? "—"}</td>
+                  <td className="px-3 py-2 text-slate-600 dark:text-slate-400 text-xs">{item.nombre_equipo ?? "—"}</td>
+                  <td className="px-3 py-2 text-slate-600 dark:text-slate-400 text-xs">{item.usuario_windows ?? "—"}</td>
+                  <td className="px-3 py-2 font-mono text-xs text-slate-600 dark:text-slate-400">
+                    {item.anydesk ? <button onClick={() => copyText(item.anydesk)} className="hover:text-indigo-600 dark:hover:text-indigo-400" title="Copiar">{item.anydesk}</button> : "—"}
+                  </td>
+                  <td className="px-3 py-2 font-mono text-xs text-slate-600 dark:text-slate-400">{item.rustdesk ?? "—"}</td>
+                  <td className="px-3 py-2 text-slate-600 dark:text-slate-400 text-xs truncate max-w-[100px]">{item.personal_asignado ?? "—"}</td>
+                  <td className="px-3 py-2 text-slate-500 dark:text-slate-400 text-xs truncate max-w-[120px]">{item.observacion ?? "—"}</td>
+                  <td className="px-3 py-2 text-right">
+                    <div className="inline-flex gap-0.5">
+                      <button onClick={() => { setForm({ subred_tab: item.subred_tab, octeto_4: item.octeto_4, tipo_dispositivo: item.tipo_dispositivo ?? "", fisico_virtual: item.fisico_virtual ?? "FISICO", codigo_patrimonial: item.codigo_patrimonial ?? "", ubicacion: item.ubicacion ?? "", marca: item.marca ?? "", nombre_equipo: item.nombre_equipo ?? "", usuario_windows: item.usuario_windows ?? "", anydesk: item.anydesk ?? "", rustdesk: item.rustdesk ?? "", clave_anydesk: item.clave_anydesk ?? "", personal_asignado: item.personal_asignado ?? "", observacion: item.observacion ?? "", estado: item.estado }); setModalOpen(true); }} className="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded text-indigo-600 dark:text-indigo-400" title="Editar">
+                        <Pencil size={14} />
+                      </button>
+                      {item.estado !== "LIBRE" && (
+                        <button onClick={() => liberar(item)} className="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded text-amber-600 dark:text-amber-400" title="Liberar IP">
+                          <Unlock size={14} />
+                        </button>
+                      )}
+                    </div>
+                  </td>
+                </tr>
+              ))}
+              {paged.length === 0 && <tr><td colSpan={15} className="text-center py-8 text-slate-400">Sin registros en esta subred</td></tr>}
+            </tbody>
+          </table>
+        </div>
+        <Pagination
+          page={page}
+          pageSize={pageSize}
+          total={total}
+          totalPages={totalPages}
+          start={start}
+          end={end}
+          onPageChange={setPage}
+          onPageSizeChange={setPageSize}
+        />
       </div>
 
       {modalOpen && (

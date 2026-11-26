@@ -1,6 +1,6 @@
 import ExcelJS from "exceljs";
 
-export type ExcelColumn = { header: string; key: string; width?: number; currency?: boolean };
+export type ExcelColumn = { header: string; key: string; width?: number };
 
 export type ExcelSheet = {
   name: string;
@@ -83,9 +83,6 @@ export async function exportToExcel(opts: {
         const cell = ws.getCell(rowIdx, ci + 1);
         const v = r[col.key];
         cell.value = (v === null || v === undefined) ? "" : (v as ExcelJS.CellValue);
-        if (col.currency && typeof v === "number") {
-          cell.numFmt = '"S/" #,##0.00';
-        }
         cell.border = { top: { style: "thin" }, bottom: { style: "thin" }, left: { style: "thin" }, right: { style: "thin" } };
         if (ri % 2 === 1) {
           cell.fill = { type: "pattern", pattern: "solid", fgColor: { argb: "F1F5F9" } };
