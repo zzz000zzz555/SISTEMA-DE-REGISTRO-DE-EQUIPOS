@@ -27,6 +27,9 @@ yarn-error.log*
 Thumbs.db
 *.tsbuildinfo
 
+# Office temporary lock files
+~$*
+
 # Python
 __pycache__/
 *.pyc
